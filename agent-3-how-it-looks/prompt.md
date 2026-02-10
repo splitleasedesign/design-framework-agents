@@ -1,75 +1,86 @@
-# Task: Host Dashboard Visual Token System
-Date: 2026-02-09
-Token Budget: 2M
+# Task: Host Success Stories — Visual Design System
+Date: 2026-02-10
+Priority: Pipeline Step 3 of 4
+Run ID: run-20260210-130900
+
+## Objective
+Take Agent 2's wireframe HTML and apply the Split Lease production visual design system. Every color, font, shadow, radius, and icon must come from Style-guide.md. The page should look like it belongs in the Split Lease product — polished, professional, on-brand.
 
 ## Input
-You are designing the **visual token system** for the Split Lease Host Dashboard.
+- **Agent 2's output:** `run-20260210-130900/step-2-communicates/host-success-stories.html`
+- **Style guide:** `agent-3-how-it-looks/Style-guide.md` — READ THIS FIRST, it is authoritative
+- **Reference tokens:** `agent-3-how-it-looks/assets/2026-02-09-host-dashboard/css/visual-system.css`
+- **Previous pipeline output** (for visual consistency): `run-20260210-095033/step-4-feels/listing-dashboard.html`
 
-### Reference Material
-- Existing mockup: `C:\Users\igor\OneDrive\Desktop\long-running processes\AI Team - SL22\runs\run-002--2026-01-30\html\improved-host-overview-dashboard--don-norman.html`
-- Calibration: `C:\Users\igor\OneDrive\Desktop\long-running processes\AI Team - SL22\agents\orchestrator\prompts\DESIGN-TASTE-MODEL.md`
+## Context
+- Marketing/social-proof page for Split Lease
+- Must be visually consistent with the rest of the Split Lease product
+- This is a public-facing conversion page — it needs to feel premium and trustworthy
+- Visitors may be seeing Split Lease for the first time
 
-### Current Visual State (from the mockup)
-The existing mockup uses these values — audit them:
-- Primary: `#31135D` (deep purple), Light: `#7B4FB5`, BG: `#ECE8F7`
-- Success: `#00C853`, Warning: `#FFC107`, Error: `#D32F2F`
-- Neutrals: `#F0F0F0`, `#E0E0E0`, `#666666`, `#1A1A1A`
-- Body font: system stack (-apple-system, BlinkMacSystemFont, Segoe UI, Roboto)
-- Font sizes: 11px, 13px, 14px, 16px, 18px, 20px, 28px, 40px (inconsistent scale)
-- Spacing: 4px, 8px, 12px, 16px, 20px, 24px, 32px, 40px
-- Radius: 8px, 12px, 16px, 20px, 50%
-- Shadows: `0 4px 6px -1px rgba(0,0,0,0.1)`, `0 10px 15px -3px rgba(0,0,0,0.1)`
-
-### Dashboard Components to Token
-- Header (purple background, white text, nav links)
-- Stats cards (white, left color bar, large number, label, subtext)
-- Action banner (warning gradient background, icon, text, CTA button)
-- Onboarding section (purple gradient, white text, step cards, progress)
-- Listing cards (white, image area, status badge, title, stats row, action buttons)
-- Buttons (primary purple, secondary outline, badge pills)
-- Typography hierarchy (h1 welcome, h2 section title, h3 listing title, body, caption, label)
+## Style Guide Rules (non-negotiable)
+These values come from Style-guide.md. Use them exactly:
+- **Primary purple:** `#31135D`
+- **Secondary purple (CTAs):** `rgb(109, 49, 194)`
+- **Accent purple:** `rgb(140, 104, 238)`
+- **Success color:** `#4B47CE` (NOT green)
+- **Font:** Inter with system fallbacks
+- **Font sizes:** Fixed production scale 11px–36px
+- **Button radius:** `20px` (pill shape)
+- **Card radius:** `12px`
+- **Shadows:** Production values including purple-tinted shadows
+- **Gradient header:** `linear-gradient(135deg, #31135D 0%, #5a2d8f 100%)`
 
 ## Process
-Execute the TDD Sandbox compound action:
+1. **Read Agent 2's HTML** — understand the wireframe structure and hierarchy
+2. **Read Style-guide.md** — load all production token values
+3. **Add `:root` CSS variables** matching Style-guide.md exactly (copy from visual-system.css)
+4. **Apply visual layer:**
+   - Import Inter font from Google Fonts
+   - Global header with gradient background
+   - Card styling: 12px radius, production shadows, white background
+   - CTA button: secondary-purple, pill shape, purple shadow on hover
+   - Pull quote styling: larger text, italic or distinct treatment, purple accent
+   - Host photo: circular with subtle border
+   - Typography hierarchy using the production scale
+   - Proper spacing using the spacing token scale
+5. **Add Feather-style SVG icons** where appropriate (navigation, CTA arrow, quote marks)
+6. **Accessibility:**
+   - `focus-visible` outlines using secondary-purple
+   - `prefers-reduced-motion` media query
+   - All text meets WCAG AA contrast (4.5:1)
+7. **Token discipline:**
+   - ALL color values as CSS custom properties in `:root`
+   - NO hardcoded hex values outside `:root`
+   - ALL transitions use `var(--transition-*)` tokens
+   - ALL radii use `var(--rounded-*)` tokens
 
-1. **Visual audit** — Catalog every color, font-size, spacing, radius, and shadow in the existing mockup
-2. **Run 30-question Taste Test** — Score the current mockup, identify failures
-3. **Generate token system:**
-   - **Color tokens:** `--color-primary` through `--color-primary-bg`, `--color-success/warning/error` + backgrounds, neutral scale (50-900), surface colors
-   - **Typography tokens:** `--font-size-xs` (11px) through `--font-size-3xl` (clamp(28px, 3vw, 36px)), `--font-weight-regular/medium/semibold/bold`, `--line-height-tight/normal/relaxed`
-   - **Spacing tokens:** `--space-1` (4px) through `--space-12` (48px), based on 4px scale
-   - **Radius tokens:** `--radius-sm` (6px), `--radius-md` (10px), `--radius-lg` (14px), `--radius-xl` (20px), `--radius-full` (9999px)
-   - **Shadow tokens:** `--shadow-sm`, `--shadow-md`, `--shadow-lg` with consistent blur/spread
-   - **Transition tokens:** `--transition-fast` (150ms), `--transition-normal` (200ms), `--transition-slow` (300ms)
-4. **Write CSS file** with all tokens as `:root` custom properties
-5. **Apply tokens** — Rewrite the mockup HTML replacing all hardcoded values with `var(--token-name)`
-6. **Check WCAG AA:** Verify contrast ratios for every text-on-background combination
-
-## Eval Target
-Design Taste Test >= 27/30 AND WCAG AA pass:
-- [ ] All colors from defined palette with usage rules
-- [ ] Typography uses consistent scale (no arbitrary sizes)
-- [ ] Spacing follows 4px scale (no arbitrary values)
-- [ ] WCAG AA: 4.5:1 text, 3:1 UI elements
-- [ ] Every color combination documented with contrast ratio
-- [ ] Focus indicators on all interactive elements
-- [ ] Consistent radius and shadow usage
-- [ ] All values specific (hex, px, rem) — nothing vague
+## Eval Target (20 items)
+All must pass:
+- [ ] Primary purple is #31135D
+- [ ] Secondary/CTA purple is rgb(109, 49, 194)
+- [ ] Success color is #4B47CE (not green)
+- [ ] Font family is Inter with system fallbacks
+- [ ] Font sizes use the fixed production scale (11-36px)
+- [ ] Button border-radius is 20px (pill) for CTAs
+- [ ] Card border-radius is 12px
+- [ ] Shadows match production values
+- [ ] Gradient header uses production values
+- [ ] ALL color values are CSS custom properties (no hardcoded hex outside :root)
+- [ ] focus-visible with secondary-purple ring
+- [ ] prefers-reduced-motion media query exists
+- [ ] Icons are Feather-style SVGs, consistently sized
+- [ ] Letter-spacing uses 0.5px for uppercase labels
+- [ ] Transitions use production durations (0.1s/0.2s/0.3s)
+- [ ] Border colors use CSS variables
+- [ ] Interactive elements have min-height ≥44px on mobile
+- [ ] Pull quote has distinct visual treatment (not same as body text)
+- [ ] CTA section is visually prominent with gradient or strong contrast
+- [ ] Page is visually consistent with the listing dashboard
 - Max retries: 3
 
 ## Output
-Save to: `assets/2026-02-09-host-dashboard/`
-Expected files:
-- `css/color-tokens.css` — --color-* custom properties with usage comments
-- `css/typography-tokens.css` — --font-size-*, --font-weight-*, --line-height-*
-- `css/spacing-tokens.css` — --space-* scale
-- `css/component-tokens.css` — --radius-*, --shadow-*, --transition-*
-- `css/visual-system.css` — All tokens combined
-- `reports/visual-audit-host-dashboard.md` — Current state catalog
-- `reports/taste-test-score.md` — XX/30 with pass/fail per question
-- `reports/color-system.md` — Palette + usage rules + contrast ratios
-- `reports/wcag-audit.md` — Contrast ratios for all text/background combos
-- `host-dashboard.html` — Complete HTML with all hardcoded values replaced by var() tokens
+Save to: `run-20260210-130900/step-3-looks/host-success-stories.html`
 
 ## When Done
-Update memory.md with: outcome | files produced | eval score | tokens generated | patterns learned
+Update memory.md with: outcome | files produced | eval score | decisions made | patterns learned

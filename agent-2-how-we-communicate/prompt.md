@@ -1,70 +1,64 @@
-# Task: Host Dashboard Layout & Responsive Specs
-Date: 2026-02-09
-Token Budget: 2M
+# Task: Host Success Stories — Information Architecture & Layout
+Date: 2026-02-10
+Priority: Pipeline Step 2 of 4
+Run ID: run-20260210-130900
+
+## Objective
+Take Agent 1's bare functional HTML and restructure it for optimal information communication. Improve hierarchy, cognitive load, layout patterns, and scannability. The visitor should instantly understand: "real hosts, real success, I should list my space too."
 
 ## Input
-You are designing the **Host Overview Dashboard** layout for Split Lease, a NYC rental platform.
+- **Agent 1's output:** `run-20260210-130900/step-1-works/host-success-stories.html`
+- Read this file first — it contains the bare functional page with all content
 
-### Reference Material
-- Existing mockup: `C:\Users\igor\OneDrive\Desktop\long-running processes\AI Team - SL22\runs\run-002--2026-01-30\html\improved-host-overview-dashboard--don-norman.html`
-- Real listing content: `C:\Users\igor\OneDrive\Desktop\long-running processes\Site Current State\listing-dashboard-text.md`
-- Calibration: `C:\Users\igor\OneDrive\Desktop\long-running processes\AI Team - SL22\agents\orchestrator\prompts\RESPONSIVE-DESIGN-MODEL.md`
-- Responsive screenshots: `C:\Users\igor\OneDrive\Desktop\long-running processes\Site Current State\mockup - Claude\responsive-screenshots\` (before/ and after-final/ folders, look for `*listing-dashboard*` files)
-
-### Dashboard Content Inventory
-The host dashboard must display:
-1. **Header** — Logo, nav (Host Overview, Messages), avatar
-2. **Welcome** — Host name, date context, action buttons (Create Listing, Import)
-3. **KPI Stats** — Earnings this month (+% change), Proposals needing action, Occupancy rate
-4. **Action Banner** — Urgent items: proposals waiting, incomplete listings
-5. **Onboarding Progress** — 5 steps: Create Listing, Add Photos, Set Pricing, House Manual, Go Live (dismissible)
-6. **Listings Grid** — Per listing: photo, title, location, status (online/offline), mini-stats (earnings, occupancy, proposals), action buttons (Manage, Proposals)
-
-Host has 1-5 listings. The dashboard is their command center — checked 2-3x/week on desktop (70%) and mobile (30%).
+## Context
+- Marketing/social-proof page for Split Lease (NYC rental platform)
+- **Visitor profile:** Prospective host, possibly skeptical, landed from Google or referral
+- **Page goal:** Read stories → build trust → click "List Your Property"
+- Currently 1 testimonial (Emily Johnson), but the layout must support N testimonials
+- This is a conversion page — the CTA is the most important action
 
 ## Process
-Execute the Spec-Driven Refactor compound action:
-
-1. **Information inventory** — List every piece of data the dashboard shows
-2. **Priority ranking:**
-   - P0 (scan first): Proposals needing action, earnings this month
-   - P1 (secondary): Listing status, onboarding progress
-   - P2 (tertiary): Welcome message, occupancy %, referral banner
-3. **Hierarchy map** — Assign visual weight: size, position, contrast for each element
-4. **Layout pattern selection:**
-   - Stats: 2-column grid (desktop), stack (mobile)
-   - Listings: auto-fill grid with minmax(320px, 1fr)
-   - Onboarding: horizontal steps (desktop), vertical list (mobile)
-   - Action banner: full-width with icon + text + CTA
-5. **Generate responsive CSS** using clamp(), auto-fill, container queries:
-   - Container padding: `clamp(16px, 4vw, 32px)`
-   - Stats grid: `repeat(auto-fill, minmax(min(100%, 280px), 1fr))`
-   - Listings grid: `repeat(auto-fill, minmax(min(100%, 320px), 1fr))`
-   - Heading: `clamp(22px, 3vw, 28px)`
-   - Body text: `clamp(13px, 1.5vw, 15px)`
-6. **Apply CSS to produce an HTML file** — Write a complete `host-dashboard.html`
-7. **Score against Responsive Taste Test** (self-evaluate at 320, 375, 428, 768, 1024, 1280, 1440px)
+1. **Read Agent 1's HTML** — understand the raw content and structure
+2. **Information inventory** — catalog every piece of information on the page:
+   - Page title / hero headline
+   - Host testimonial: photo, name, profession, pull quote, full story
+   - CTA: headline + button
+   - Navigation
+3. **Priority ranking:**
+   - P0: Hero headline + first testimonial pull quote (hook the visitor)
+   - P0: CTA section (the conversion goal)
+   - P1: Full testimonial story (social proof depth)
+   - P1: Host identity (name, profession, photo — trust signals)
+   - P2: Navigation
+4. **Layout decisions:**
+   - Hero section: page title + value proposition
+   - Testimonial card pattern: photo + quote + expandable/visible story
+   - Consider: card layout that scales from 1 to many testimonials
+   - CTA section: sticky or prominent, hard to miss
+   - Pull quote should be visually distinct from the story body
+5. **Apply wireframe CSS:**
+   - Two-column or card-based layout for testimonials
+   - Visual hierarchy through size, weight, spacing (no colors yet)
+   - Responsive: stack on mobile, grid on desktop
+   - Clear separation between testimonial and CTA
+6. **Do NOT add:** colors, shadows, icons, fonts, decorative elements — that's Agent 3
 
 ## Eval Target
-Responsive Taste Test >= 27/30, plus:
-- [ ] No horizontal scroll at any viewport
-- [ ] Stats cards stack on mobile (<768px), side-by-side on desktop
-- [ ] Listing cards stack on mobile, 2-col on tablet, 3-col on desktop
-- [ ] Onboarding steps: horizontal on desktop, vertical/scrollable on mobile
-- [ ] Action banner: full-width, text wraps cleanly on mobile
-- [ ] All touch targets >= 44px on mobile
-- [ ] Typography scales fluidly (no overflow, no tiny text)
-- [ ] Information hierarchy preserved at every viewport
+All must pass:
+- [ ] Hero section communicates page purpose in under 3 seconds
+- [ ] Pull quote is the most prominent text in the testimonial (not buried in body)
+- [ ] Host identity (name, profession, photo) is clearly associated with their story
+- [ ] Full story is readable but doesn't overwhelm — progressive disclosure if long
+- [ ] CTA section is visually prominent and clearly the next step
+- [ ] Layout works for 1 testimonial and would work for 3-6 testimonials
+- [ ] Information hierarchy is clear: headline > quote > identity > story > CTA
+- [ ] Page is scannable — a visitor skimming gets the key message
+- [ ] Responsive: readable on mobile (single column) and desktop (multi-column possible)
+- [ ] Cognitive load is low — no competing calls to action, no visual noise
 - Max retries: 3
 
 ## Output
-Save to: `assets/2026-02-09-host-dashboard/`
-Expected files:
-- `reports/hierarchy-map-host-dashboard.md` — Information priority ranking
-- `reports/layout-spec-host-dashboard.md` — Pattern choices + responsive behavior
-- `css/responsive-tokens.css` — CSS custom properties (clamp values)
-- `css/host-dashboard.css` — Complete responsive stylesheet
-- `host-dashboard.html` — Complete working HTML page with responsive layout
+Save to: `run-20260210-130900/step-2-communicates/host-success-stories.html`
 
 ## When Done
 Update memory.md with: outcome | files produced | eval score | decisions made | patterns learned
