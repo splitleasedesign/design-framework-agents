@@ -73,33 +73,29 @@ This is the **Plan-Act-Verify Loop** from the strategy doc. The eval is what mak
 
 ---
 
-## Overnight Execution Model
+## Execution Model
 
-These agents are designed as overnight compound actions:
+### Pipeline Run
+
+```
+1. Give orchestrator a design target + raw content
+2. Agent 1 → bare functional HTML         (step-1-works/)
+3. Agent 2 → structured wireframe          (step-2-communicates/)
+4. Agent 3 → production-styled page        (step-3-looks/)
+5. Agent 4 → emotionally intelligent page  (step-4-feels/)
+6. Validation loop: all 4 agents score the final page in parallel
+7. Fix failures, re-validate until all pass (validation/)
+```
 
 | Tactic | How It Applies |
 |--------|---------------|
+| **Sequential Pipeline** | Each agent builds on the previous agent's HTML output |
 | **Compound Actions** | One prompt expands into 7-10 autonomous steps |
 | **Eval Loops** | Agent keeps iterating until target score is met |
-| **Concrete Outputs** | Files saved to disk (CSS, MD, screenshots), not conversation |
+| **Concrete Outputs** | Files saved to disk (HTML, CSS, MD), not conversation |
 | **Self-Correction** | Failed eval → diagnose → retry (up to 3x) |
-| **Token Budgets** | 0.5M–5M per task type, prevents runaway |
-| **Fan-Out** | Orchestrator assigns all 4 in parallel, synthesis after |
+| **Validation Loop** | All 4 agents review final output in parallel |
 | **Memory Logging** | Every session writes decisions, patterns, outcomes to memory.md |
-
-### Overnight Setup
-
-```
-Evening:
-  1. Load orchestrator → write prompts to all 4 agents
-  2. Start each agent in a separate tab/session
-  3. Each agent runs its compound action autonomously
-
-Morning:
-  4. Read memory.md files for outcomes
-  5. Check assets/ folders for deliverables
-  6. Orchestrator synthesizes cross-pillar results
-```
 
 ---
 
@@ -114,29 +110,51 @@ Morning:
 
 ---
 
-## Cross-Agent Dependencies
+## Sequential Pipeline — Each Agent Builds on the Previous
+
+The agents run as a **sequential pipeline**, not in parallel. Each agent receives the previous agent's HTML output as its input and layers on its specific concern. This is the core architectural principle.
 
 ```
-                    ┌─────────────────────┐
-                    │   ORCHESTRATOR       │
-                    │   Fan-out + Synthesis│
-                    └─────────┬───────────┘
-                              │
-         ┌────────────────────┼────────────────────┐
-         │                    │                     │
-    ┌────▼─────┐    ┌────────▼────────┐    ┌───────▼──────┐
-    │ Agent 1  │    │ Agent 2         │    │ Agent 3      │
-    │ Flows    │───►│ Layout + CSS    │───►│ Visual       │
-    │          │    │ + Playwright    │    │ Tokens + CSS │
-    └────┬─────┘    └────────┬────────┘    └───────┬──────┘
-         │                   │                     │
-         │          ┌────────▼────────┐            │
-         └─────────►│ Agent 4         │◄───────────┘
-                    │ Emotion + Copy  │
-                    └─────────────────┘
+INPUT (text content, feature spec, or raw data)
+  │
+  ▼
+┌──────────────────────────────────────────────────────┐
+│  Agent 1 — How it Works                             │
+│  Takes raw content → produces bare functional HTML   │
+│  No styling, just A→B. Every action reachable.       │
+│  Output: ugly but complete page                      │
+└──────────────────────┬───────────────────────────────┘
+                       │ HTML file
+                       ▼
+┌──────────────────────────────────────────────────────┐
+│  Agent 2 — How we Communicate                       │
+│  Takes Agent 1's HTML → improves information         │
+│  architecture, cognitive load, layout, hierarchy.    │
+│  Output: well-structured wireframe                   │
+└──────────────────────┬───────────────────────────────┘
+                       │ HTML file
+                       ▼
+┌──────────────────────────────────────────────────────┐
+│  Agent 3 — How it Looks                             │
+│  Takes Agent 2's HTML → applies visual design        │
+│  system (colors, typography, shadows, icons).        │
+│  Must follow Style-guide.md exactly.                 │
+│  Output: production-quality styled page              │
+└──────────────────────┬───────────────────────────────┘
+                       │ HTML file
+                       ▼
+┌──────────────────────────────────────────────────────┐
+│  Agent 4 — How it Feels                             │
+│  Takes Agent 3's HTML → adds emotional intelligence. │
+│  Reframes copy, adds empathy, micro-interactions,    │
+│  reassurance, celebration. No visual changes.        │
+│  Output: final page with all 4 layers               │
+└──────────────────────┴───────────────────────────────┘
 ```
 
-**Agents 1, 2, 3 run in parallel.** Agent 4 integrates after.
+**Why sequential, not parallel:** Each layer depends on the previous one. You can't style a layout that doesn't exist yet. You can't add emotional copy to unstyled wireframes. The pipeline ensures each agent has the right context to do its job well.
+
+After the pipeline completes, a **validation loop** runs all 4 agents in parallel — each reviewing the final output through their specific lens.
 
 ---
 
