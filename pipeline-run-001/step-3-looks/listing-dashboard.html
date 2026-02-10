@@ -1,0 +1,1699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Listing Dashboard - 1 Bedroom Private Room in Queens</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   AGENT 3 — VISUAL DESIGN SYSTEM (Split Lease Production)
+   Applied on top of Agent 2's information architecture.
+   Structure and content are UNCHANGED.
+   Colors, typography, shadows, radius, icons, transitions added.
+   ============================================================ */
+
+/* --- CSS VARIABLES (from Style-guide.md) --- */
+:root {
+  --primary-purple: #31135D;
+  --primary-purple-hover: #251047;
+  --primary-purple-dark: #1f0a3d;
+  --secondary-purple: rgb(109, 49, 194);
+  --accent-purple: rgb(140, 104, 238);
+  --selected-purple: rgb(79, 48, 151);
+  --text-purple: rgb(82, 31, 147);
+  --chat-purple: rgb(75, 71, 206);
+
+  --success-green: #4B47CE;
+  --success-teal: #4B47CE;
+
+  --text-dark: #1a1a1a;
+  --text-gray: #6b7280;
+  --text-light-gray: #9ca3af;
+  --text-medium-gray: #666666;
+  --text-description: #374151;
+
+  --bg-white: #ffffff;
+  --bg-light: #f9fafb;
+  --bg-light-gray: #f3f4f6;
+  --bg-off-white: rgb(252, 250, 255);
+
+  --border-color: #e5e7eb;
+  --border-light: #f3f4f6;
+
+  --gradient-purple-primary: linear-gradient(135deg, #31135D 0%, #5a2d8f 100%);
+  --gradient-purple-button: linear-gradient(135deg, #4B47CE 0%, #7C3AED 100%);
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --shadow-purple-md: 0 4px 8px rgba(49, 19, 93, 0.15);
+  --shadow-purple-lg: 0 6px 20px rgba(109, 49, 194, 0.35);
+
+  --rounded-sm: 4px;
+  --rounded-md: 6px;
+  --rounded-lg: 8px;
+  --rounded-xl: 12px;
+  --rounded-pill: 20px;
+  --rounded-full: 50%;
+
+  --transition-fast: 0.1s;
+  --transition-base: 0.2s;
+  --transition-slow: 0.3s;
+
+  --font-inter: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* --- RESET & BASE --- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-inter);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-dark);
+  background: var(--bg-light);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a { color: var(--secondary-purple); text-decoration: none; font-weight: 500; }
+a:hover { color: var(--accent-purple); text-decoration: underline; }
+
+button {
+  font-family: var(--font-inter);
+  font-size: 14px;
+  cursor: pointer;
+  border: 1px solid var(--border-color);
+  background: var(--bg-white);
+  padding: 8px 16px;
+  border-radius: var(--rounded-pill);
+  color: var(--text-description);
+  font-weight: 500;
+  transition: all var(--transition-base) ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+button:hover {
+  background: var(--bg-light-gray);
+  border-color: #d1d5db;
+}
+button:focus-visible {
+  outline: 2px solid var(--secondary-purple);
+  outline-offset: 2px;
+}
+
+/* --- GLOBAL HEADER BAR --- */
+.global-header {
+  background: var(--gradient-purple-primary);
+  padding: 0 24px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.global-header__logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  text-decoration: none;
+}
+
+.global-header__logo:hover { color: #fff; text-decoration: none; }
+
+.global-header__logo svg {
+  flex-shrink: 0;
+}
+
+.global-header__nav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.global-header__nav a {
+  color: rgba(255,255,255,0.8);
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color var(--transition-fast) ease;
+}
+
+.global-header__nav a:hover {
+  color: #fff;
+  text-decoration: none;
+}
+
+/* --- PAGE SHELL --- */
+.page-shell {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+}
+
+/* --- BREADCRUMB NAV --- */
+.breadcrumb {
+  padding: 12px 0;
+  font-size: 13px;
+  color: var(--text-gray);
+  margin-bottom: 24px;
+}
+
+.breadcrumb a {
+  color: var(--text-gray);
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: color var(--transition-fast) ease;
+}
+
+.breadcrumb a:hover {
+  color: var(--secondary-purple);
+  text-decoration: none;
+}
+
+.breadcrumb a svg {
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   P0: STATUS HEADER
+   ============================================================ */
+.status-header {
+  background: var(--bg-white);
+  border: 1px solid var(--border-color);
+  border-radius: var(--rounded-xl);
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow-sm);
+}
+
+.status-header__top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.status-header__title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--primary-purple);
+  flex: 1 1 300px;
+  line-height: 1.2;
+}
+
+.status-header__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.status-header__status-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 4px 14px;
+  border-radius: var(--rounded-pill);
+}
+
+.status-badge--offline {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fbbf24;
+}
+
+.status-badge--online {
+  background: rgba(75, 71, 206, 0.1);
+  color: var(--success-green);
+  border: 1px solid rgba(75, 71, 206, 0.3);
+}
+
+.status-badge__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--rounded-full);
+  flex-shrink: 0;
+}
+
+.status-badge--offline .status-badge__dot {
+  background: #f59e0b;
+}
+
+.status-badge--online .status-badge__dot {
+  background: var(--success-green);
+}
+
+.status-meta {
+  font-size: 13px;
+  color: var(--text-gray);
+}
+
+.btn-primary {
+  background: var(--secondary-purple);
+  color: #fff;
+  border-color: var(--secondary-purple);
+  font-weight: 600;
+  padding: 10px 24px;
+  border-radius: var(--rounded-pill);
+  box-shadow: 0 2px 4px rgba(109, 49, 194, 0.25);
+  transition: all var(--transition-base) ease;
+}
+.btn-primary:hover {
+  background: var(--accent-purple);
+  border-color: var(--accent-purple);
+  box-shadow: var(--shadow-purple-md);
+  color: #fff;
+}
+
+.btn-secondary-outline {
+  background: transparent;
+  color: var(--secondary-purple);
+  border: 1px solid var(--secondary-purple);
+  font-weight: 500;
+}
+.btn-secondary-outline:hover {
+  background: rgba(109, 49, 194, 0.06);
+  border-color: var(--accent-purple);
+}
+
+.status-header__address {
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--text-gray);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status-header__address svg {
+  flex-shrink: 0;
+  color: var(--text-light-gray);
+}
+
+/* ============================================================
+   P0: COMPLETION TRACKER
+   ============================================================ */
+.completion-tracker {
+  background: var(--bg-white);
+  border: 1px solid var(--border-color);
+  border-radius: var(--rounded-xl);
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow-sm);
+}
+
+.completion-tracker__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.completion-tracker__title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-dark);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.completion-tracker__title svg {
+  color: var(--secondary-purple);
+  flex-shrink: 0;
+}
+
+.completion-tracker__fraction {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-gray);
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: var(--bg-light-gray);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.progress-bar__fill {
+  height: 100%;
+  background: var(--secondary-purple);
+  border-radius: 4px;
+  transition: width 0.4s ease;
+}
+
+.completion-checklist {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 8px;
+}
+
+.completion-checklist li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  padding: 10px 12px;
+  border-radius: var(--rounded-lg);
+  transition: background var(--transition-fast) ease;
+}
+
+.completion-checklist li.complete {
+  color: var(--text-gray);
+  background: transparent;
+}
+
+.completion-checklist li.incomplete {
+  color: var(--text-dark);
+  background: #fef9ee;
+  border: 1px solid #fde68a;
+}
+
+.check-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: var(--rounded-full);
+  font-size: 11px;
+  flex-shrink: 0;
+}
+
+.check-icon--done {
+  background: rgba(75, 71, 206, 0.12);
+  color: var(--success-green);
+}
+
+.check-icon--todo {
+  background: #f59e0b;
+  color: #fff;
+  font-weight: 700;
+}
+
+/* ============================================================
+   TWO-COLUMN LAYOUT
+   ============================================================ */
+.page-layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .page-layout {
+    grid-template-columns: 1fr;
+  }
+  .sidebar {
+    order: -1;
+  }
+}
+
+/* --- SIDEBAR: Quick Summary Card --- */
+.summary-card {
+  background: var(--bg-white);
+  border: 1px solid var(--border-color);
+  border-radius: var(--rounded-xl);
+  padding: 24px;
+  position: sticky;
+  top: 16px;
+  box-shadow: var(--shadow-md);
+}
+
+.summary-card__title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-gray);
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.summary-card__title svg {
+  color: var(--secondary-purple);
+  flex-shrink: 0;
+}
+
+.summary-card__row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-light);
+  font-size: 13px;
+}
+
+.summary-card__row:last-child { border-bottom: none; }
+
+.summary-card__label { color: var(--text-gray); }
+.summary-card__value { font-weight: 600; color: var(--text-dark); }
+
+.summary-card__section {
+  margin-top: 24px;
+}
+
+.summary-card__section-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-gray);
+  margin-bottom: 8px;
+}
+
+/* --- P3: Low-priority sidebar items --- */
+.sidebar-low-priority {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-color);
+}
+
+.sidebar-promo {
+  background: var(--bg-off-white);
+  border: 1px solid var(--border-color);
+  border-radius: var(--rounded-xl);
+  padding: 16px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  color: var(--text-gray);
+  transition: box-shadow var(--transition-base) ease;
+}
+
+.sidebar-promo:hover {
+  box-shadow: var(--shadow-sm);
+}
+
+.sidebar-promo strong {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-dark);
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.sidebar-promo strong svg {
+  color: var(--secondary-purple);
+  flex-shrink: 0;
+}
+
+.sidebar-promo a {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.sidebar-promo .btn-sidebar {
+  margin-top: 8px;
+  font-size: 12px;
+  padding: 6px 14px;
+  border-radius: var(--rounded-pill);
+  background: var(--secondary-purple);
+  color: #fff;
+  border: none;
+  font-weight: 600;
+}
+
+.sidebar-promo .btn-sidebar:hover {
+  background: var(--accent-purple);
+}
+
+/* ============================================================
+   MAIN CONTENT — SECTION CARDS
+   ============================================================ */
+.main-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* --- Section Group --- */
+.section-group {
+  background: var(--bg-white);
+  border: 1px solid var(--border-color);
+  border-radius: var(--rounded-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition-base) ease;
+}
+
+.section-group:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.section-group__label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-gray);
+  padding: 14px 24px;
+  background: var(--bg-light);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-group__label svg {
+  color: var(--secondary-purple);
+  flex-shrink: 0;
+}
+
+/* --- Individual Section Card --- */
+.section-card {
+  padding: 24px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.section-card:last-child { border-bottom: none; }
+
+.section-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+
+.section-card__title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-dark);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-card__title svg {
+  color: var(--text-light-gray);
+  flex-shrink: 0;
+}
+
+.section-card__badge {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 4px 12px;
+  border-radius: var(--rounded-pill);
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.section-card__badge--incomplete {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fde68a;
+}
+
+.section-card__badge--complete {
+  background: rgba(75, 71, 206, 0.08);
+  color: var(--success-green);
+  border: 1px solid rgba(75, 71, 206, 0.2);
+}
+
+.section-card__content {
+  color: var(--text-description);
+  font-size: 14px;
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+
+.section-card__content p { margin-bottom: 8px; }
+.section-card__content p:last-child { margin-bottom: 0; }
+
+.section-card__content ul {
+  list-style: none;
+  padding: 0;
+}
+
+.section-card__content ul li {
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border-light);
+  font-size: 14px;
+}
+
+.section-card__content ul li:last-child { border-bottom: none; }
+
+.section-card__actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-edit {
+  font-size: 13px;
+  padding: 6px 16px;
+  color: var(--secondary-purple);
+  border: 1px solid var(--secondary-purple);
+  border-radius: var(--rounded-pill);
+  background: transparent;
+  font-weight: 600;
+  transition: all var(--transition-fast) ease;
+}
+
+.btn-edit:hover {
+  background: rgba(109, 49, 194, 0.06);
+  border-color: var(--accent-purple);
+  color: var(--accent-purple);
+}
+
+/* --- Empty State --- */
+.empty-state {
+  padding: 20px;
+  background: var(--bg-off-white);
+  border: 1px dashed rgba(109, 49, 194, 0.25);
+  border-radius: var(--rounded-lg);
+  color: var(--text-description);
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+.empty-state__label {
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.empty-state__label svg {
+  color: var(--text-light-gray);
+  flex-shrink: 0;
+}
+
+.empty-state__hint {
+  color: var(--text-gray);
+  line-height: 1.6;
+}
+
+/* ============================================================
+   COLLAPSIBLE / PROGRESSIVE DISCLOSURE
+   ============================================================ */
+.disclosure {
+  border: 1px solid var(--border-color);
+  border-radius: var(--rounded-lg);
+  margin-top: 16px;
+  overflow: hidden;
+}
+
+.disclosure__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--bg-light);
+  border: none;
+  border-radius: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--secondary-purple);
+  cursor: pointer;
+  text-align: left;
+  transition: background var(--transition-fast) ease;
+}
+
+.disclosure__trigger:hover { background: rgba(109, 49, 194, 0.04); }
+
+.disclosure__trigger::after {
+  content: '';
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid var(--secondary-purple);
+  transition: transform var(--transition-base) ease;
+  flex-shrink: 0;
+}
+
+.disclosure__trigger[aria-expanded="true"]::after {
+  transform: rotate(180deg);
+}
+
+.disclosure__body {
+  display: none;
+  padding: 16px;
+  border-top: 1px solid var(--border-color);
+}
+
+.disclosure__body.is-open {
+  display: block;
+}
+
+/* --- Tables (pricing, calendar) --- */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.data-table th {
+  text-align: left;
+  padding: 10px 12px;
+  background: var(--bg-light);
+  border-bottom: 2px solid var(--border-color);
+  font-weight: 600;
+  color: var(--text-gray);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.data-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border-light);
+  color: var(--text-description);
+}
+
+.data-table tr:last-child td { border-bottom: none; }
+
+.data-table tbody tr {
+  transition: background var(--transition-fast) ease;
+}
+
+.data-table tbody tr:hover {
+  background: var(--bg-off-white);
+}
+
+.data-table tbody tr:nth-child(even) {
+  background: var(--bg-light);
+}
+
+.data-table tbody tr:nth-child(even):hover {
+  background: var(--bg-off-white);
+}
+
+/* --- Calendar Table --- */
+.calendar-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  text-align: center;
+}
+
+.calendar-table th {
+  padding: 10px 4px;
+  font-weight: 600;
+  color: var(--text-gray);
+  font-size: 12px;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.calendar-table td {
+  padding: 10px 4px;
+  border-bottom: 1px solid var(--border-light);
+  color: var(--text-description);
+  border-radius: var(--rounded-sm);
+  transition: background var(--transition-fast) ease;
+}
+
+.calendar-table td:hover {
+  background: var(--bg-off-white);
+}
+
+.calendar-table .first-available {
+  font-weight: 700;
+  color: var(--secondary-purple);
+  background: rgba(109, 49, 194, 0.08);
+  border-radius: var(--rounded-md);
+}
+
+/* --- Details List (inline key-value) --- */
+.details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+@media (max-width: 480px) {
+  .details-grid { grid-template-columns: 1fr; }
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: var(--bg-light);
+  border-radius: var(--rounded-lg);
+  font-size: 13px;
+}
+
+.detail-item__label { color: var(--text-gray); }
+.detail-item__value { font-weight: 600; color: var(--text-dark); }
+
+.detail-item--warning {
+  background: #fef9ee;
+  border: 1px solid #fde68a;
+}
+
+/* --- Pricing Summary Line --- */
+.pricing-summary {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--primary-purple);
+  margin-bottom: 8px;
+}
+
+.pricing-summary__sub {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--text-gray);
+}
+
+/* --- Calendar controls --- */
+.calendar-controls {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.calendar-controls button {
+  font-size: 12px;
+  padding: 6px 14px;
+  border-radius: var(--rounded-pill);
+}
+
+.calendar-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-size: 12px;
+  color: var(--text-gray);
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-light);
+}
+
+.calendar-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* --- Import Reviews link --- */
+.import-link {
+  font-size: 12px;
+  color: var(--text-gray);
+  margin-top: 4px;
+}
+
+/* --- Utility --- */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  border: 0;
+}
+
+.text-muted { color: var(--text-gray); }
+.text-small { font-size: 12px; }
+.mt-8 { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.mb-8 { margin-bottom: 8px; }
+.mb-16 { margin-bottom: 16px; }
+
+/* --- Focus / Accessibility --- */
+:focus-visible {
+  outline: 2px solid var(--secondary-purple);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* --- Responsive refinements --- */
+@media (max-width: 600px) {
+  .status-header__top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .status-header__actions {
+    width: 100%;
+  }
+  .status-header__actions .btn-primary {
+    flex: 1;
+    justify-content: center;
+  }
+  .completion-checklist {
+    grid-template-columns: 1fr;
+  }
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
+  .page-shell {
+    padding: 16px 12px 40px;
+  }
+  .section-card {
+    padding: 16px;
+  }
+  .section-group__label {
+    padding: 12px 16px;
+  }
+  .pricing-summary {
+    font-size: 16px;
+  }
+  .global-header__nav {
+    gap: 12px;
+  }
+  .global-header__nav a {
+    font-size: 12px;
+  }
+}
+
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     GLOBAL HEADER BAR (Split Lease branded)
+     ============================================================ -->
+<header class="global-header">
+  <a href="#" class="global-header__logo">
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="28" height="28" rx="6" fill="rgba(255,255,255,0.15)"/>
+      <path d="M8 10h12M8 14h8M8 18h10" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    Split Lease
+  </a>
+  <nav class="global-header__nav">
+    <a href="#">Dashboard</a>
+    <a href="#">Listings</a>
+    <a href="#">Messages</a>
+    <a href="#">Account</a>
+  </nav>
+</header>
+
+<div class="page-shell">
+
+  <!-- ============================================================
+       BREADCRUMB NAV
+       ============================================================ -->
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="#">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      All My Listings
+    </a>
+  </nav>
+
+
+  <!-- ============================================================
+       P0: STATUS HEADER
+       What: Status, title, key actions — the first thing the host sees.
+       Why: Host must know listing is OFFLINE and have immediate access
+       to Preview / Go Online without scrolling.
+       ============================================================ -->
+  <header class="status-header">
+    <div class="status-header__top">
+      <h1 class="status-header__title">1 Bedroom Private Room in Queens</h1>
+      <div class="status-header__actions">
+        <button type="button" class="btn-secondary-outline">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+          Preview Listing
+        </button>
+        <button type="button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+          Copy Link
+        </button>
+        <button type="button" class="btn-primary" id="statusToggle" onclick="toggleStatus()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+          Go Online
+        </button>
+      </div>
+    </div>
+    <div class="status-header__status-row">
+      <span class="status-badge status-badge--offline" id="statusBadge">
+        <span class="status-badge__dot"></span>
+        Offline
+      </span>
+      <span class="status-meta">Active since February 5, 2026</span>
+    </div>
+    <p class="status-header__address">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+      124-56 135th Pl, Jamaica, NY 11420, USA
+    </p>
+  </header>
+
+
+  <!-- ============================================================
+       P0: COMPLETION TRACKER
+       What: Progress bar + checklist of what's done vs. missing.
+       Why: Creates a clear mental model of "what do I need to do?"
+       Incomplete items are highlighted to draw attention.
+       ============================================================ -->
+  <section class="completion-tracker" aria-label="Listing completion progress">
+    <div class="completion-tracker__header">
+      <h2 class="completion-tracker__title">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+        Listing Completeness
+      </h2>
+      <span class="completion-tracker__fraction">4 of 10 sections complete</span>
+    </div>
+    <div class="progress-bar" role="progressbar" aria-valuenow="4" aria-valuemin="0" aria-valuemax="10" aria-label="4 of 10 sections complete">
+      <div class="progress-bar__fill" style="width: 40%;"></div>
+    </div>
+    <ul class="completion-checklist">
+      <li class="incomplete"><span class="check-icon check-icon--todo">!</span> Photos &mdash; no photos uploaded</li>
+      <li class="incomplete"><span class="check-icon check-icon--todo">!</span> Amenities &mdash; none selected</li>
+      <li class="incomplete"><span class="check-icon check-icon--todo">!</span> Neighborhood description</li>
+      <li class="incomplete"><span class="check-icon check-icon--todo">!</span> Safety features &mdash; none selected</li>
+      <li class="incomplete"><span class="check-icon check-icon--todo">!</span> Square footage &mdash; set to 0</li>
+      <li class="incomplete"><span class="check-icon check-icon--todo">!</span> Rules &mdash; none selected</li>
+      <li class="complete"><span class="check-icon check-icon--done">&#10003;</span> Description</li>
+      <li class="complete"><span class="check-icon check-icon--done">&#10003;</span> Pricing</li>
+      <li class="complete"><span class="check-icon check-icon--done">&#10003;</span> Availability</li>
+      <li class="complete"><span class="check-icon check-icon--done">&#10003;</span> Cancellation policy</li>
+    </ul>
+  </section>
+
+
+  <!-- ============================================================
+       TWO-COLUMN LAYOUT: Main Content + Sidebar
+       ============================================================ -->
+  <div class="page-layout">
+
+    <!-- ==========================================================
+         MAIN CONTENT (left / wider column)
+         Sections ordered by priority, grouped by topic.
+         ========================================================== -->
+    <main class="main-content">
+
+      <!-- --------------------------------------------------------
+           GROUP: MEDIA (Photos)
+           P0 — Photos are the #1 missing item for guest conversion.
+           -------------------------------------------------------- -->
+      <div class="section-group">
+        <div class="section-group__label">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+          Media
+        </div>
+        <section class="section-card" aria-label="Photos">
+          <div class="section-card__header">
+            <h3 class="section-card__title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+              Photos
+            </h3>
+            <span class="section-card__badge section-card__badge--incomplete">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+              Needs content
+            </span>
+          </div>
+          <div class="section-card__content">
+            <div class="empty-state">
+              <p class="empty-state__label">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                No photos uploaded yet.
+              </p>
+              <p class="empty-state__hint">Listings with photos get significantly more views. Add photos of each room, common areas, and the exterior.</p>
+            </div>
+          </div>
+          <div class="section-card__actions">
+            <button type="button" class="btn-edit">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+              Add Photos
+            </button>
+          </div>
+        </section>
+      </div>
+
+
+      <!-- --------------------------------------------------------
+           GROUP: ABOUT (Description, Neighborhood, Details, Safety)
+           Mixed completeness — Description is okay, rest need work.
+           -------------------------------------------------------- -->
+      <div class="section-group">
+        <div class="section-group__label">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+          About This Space
+        </div>
+
+        <!-- Description -->
+        <section class="section-card" aria-label="Description">
+          <div class="section-card__header">
+            <h3 class="section-card__title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+              Description
+            </h3>
+            <span class="section-card__badge section-card__badge--complete">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              Done
+            </span>
+          </div>
+          <div class="section-card__content">
+            <p>1 bedroom private room available for nightly rental.</p>
+            <p class="import-link"><a href="#">Import reviews from other sites</a></p>
+          </div>
+          <div class="section-card__actions">
+            <button type="button" class="btn-edit">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+              Edit
+            </button>
+          </div>
+        </section>
+
+        <!-- Neighborhood -->
+        <section class="section-card" aria-label="Neighborhood Description">
+          <div class="section-card__header">
+            <h3 class="section-card__title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="3"></circle><path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 7 8 11.7z"></path></svg>
+              Neighborhood
+            </h3>
+            <span class="section-card__badge section-card__badge--incomplete">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+              Needs content
+            </span>
+          </div>
+          <div class="section-card__content">
+            <div class="empty-state">
+              <p class="empty-state__label">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="3"></circle><path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 7 8 11.7z"></path></svg>
+                No neighborhood description provided.
+              </p>
+              <p class="empty-state__hint">Describe nearby transit, restaurants, parks, and landmarks to help guests understand the area.</p>
+            </div>
+          </div>
+          <div class="section-card__actions">
+            <button type="button" class="btn-edit">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+              Edit
+            </button>
+          </div>
+        </section>
+
+        <!-- Details -->
+        <section class="section-card" aria-label="Listing Details">
+          <div class="section-card__header">
+            <h3 class="section-card__title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+              Details
+            </h3>
+            <span class="section-card__badge section-card__badge--incomplete">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+              Needs update
+            </span>
+          </div>
+          <div class="section-card__content">
+            <div class="details-grid">
+              <div class="detail-item">
+                <span class="detail-item__label">Type</span>
+                <span class="detail-item__value">Private Room</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-item__label">Bedrooms</span>
+                <span class="detail-item__value">1</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-item__label">Bathrooms</span>
+                <span class="detail-item__value">1</span>
+              </div>
+              <div class="detail-item detail-item--warning">
+                <span class="detail-item__label">Square Footage</span>
+                <span class="detail-item__value">0 sq.ft.</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-item__label">Storage</span>
+                <span class="detail-item__value">No</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-item__label">Parking</span>
+                <span class="detail-item__value">No</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-item__label">Kitchen</span>
+                <span class="detail-item__value">Full Kitchen</span>
+              </div>
+            </div>
+          </div>
+          <div class="section-card__actions">
+            <button type="button" class="btn-edit">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+              Edit
+            </button>
+          </div>
+        </section>
+
+        <!-- Safety Features -->
+        <section class="section-card" aria-label="Safety Features">
+          <div class="section-card__header">
+            <h3 class="section-card__title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+              Safety Features
+            </h3>
+            <span class="section-card__badge section-card__badge--incomplete">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+              Needs content
+            </span>
+          </div>
+          <div class="section-card__content">
+            <div class="empty-state">
+              <p class="empty-state__label">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                No safety features selected.
+              </p>
+              <p class="empty-state__hint">List smoke detectors, carbon monoxide detectors, fire extinguishers, and first aid kits available to guests.</p>
+            </div>
+          </div>
+          <div class="section-card__actions">
+            <button type="button" class="btn-edit">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+              Edit
+            </button>
+          </div>
+        </section>
+      </div>
+
+
+      <!-- --------------------------------------------------------
+           GROUP: AMENITIES
+           P0 — Guests filter by amenities. None selected.
+           -------------------------------------------------------- -->
+      <div class="section-group">
+        <div class="section-group__label">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+          Amenities
+        </div>
+        <section class="section-card" aria-label="Amenities">
+          <div class="section-card__header">
+            <h3 class="section-card__title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+              Amenities
+            </h3>
+            <span class="section-card__badge section-card__badge--incomplete">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+              Needs content
+            </span>
+          </div>
+          <div class="section-card__content">
+            <div class="empty-state">
+              <p class="empty-state__label">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                No amenities selected for in-unit or building.
+              </p>
+              <p class="empty-state__hint">Add amenities like WiFi, laundry, air conditioning, and heating. Guests often filter search results by amenities.</p>
+            </div>
+          </div>
+          <div class="section-card__actions">
+            <button type="button" class="btn-edit">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+              Edit Amenities
+            </button>
+          </div>
+        </section>
+      </div>
+
+
+      <!-- --------------------------------------------------------
+           GROUP: PRICING & AVAILABILITY
+           P1 — These sections are mostly complete.
+           Uses progressive disclosure for dense table data.
+           -------------------------------------------------------- -->
+      <div class="section-group">
+        <div class="section-group__label">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+          Pricing &amp; Availability
+        </div>
+
+        <!-- Pricing -->
+        <section class="section-card" aria-label="Pricing">
+          <div class="section-card__header">
+            <h3 class="section-card__title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+              Pricing
+            </h3>
+            <span class="section-card__badge section-card__badge--complete">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              Done
+            </span>
+          </div>
+          <div class="section-card__content">
+            <p class="pricing-summary">
+              $77 &ndash; $102 / night
+              <span class="pricing-summary__sub">&middot; Nightly lease style &middot; 4 nights/week available</span>
+            </p>
+            <p class="text-small text-muted">Damage deposit: $500 &middot; Maintenance fee: $0</p>
+
+            <!-- Progressive disclosure: full pricing table -->
+            <div class="disclosure">
+              <button type="button" class="disclosure__trigger" aria-expanded="false" aria-controls="pricing-detail" onclick="toggleDisclosure(this)">
+                <span style="display:inline-flex;align-items:center;gap:6px;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  View weekly rate breakdown
+                </span>
+              </button>
+              <div class="disclosure__body" id="pricing-detail">
+                <table class="data-table">
+                  <thead>
+                    <tr><th>Nights</th><th>Total</th><th>Per Night</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>1 night</td><td>$102</td><td>$102/nt</td></tr>
+                    <tr><td>2 nights</td><td>$190</td><td>$95/nt</td></tr>
+                    <tr><td>3 nights</td><td>$267</td><td>$89/nt</td></tr>
+                    <tr><td>4 nights</td><td>$336</td><td>$84/nt</td></tr>
+                    <tr><td>5 nights</td><td>$395</td><td>$79/nt</td></tr>
+                    <tr><td>6 nights</td><td>$474</td><td>$79/nt</td></tr>
+                    <tr><td>7 nights</td><td>$539</td><td>$77/nt</td></tr>
+                  </tbody>
+                </table>
+                <p class="text-small text-muted mt-8">Weekly total based on selected number of nights.</p>
+              </div>
+            </div>
+          </div>
+          <div class="section-card__actions">
+            <button type="button" class="btn-edit">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+              Edit
+            </button>
+          </div>
+        </section>
+
+        <!-- Rules -->
+        <section class="section-card" aria-label="Rules">
+          <div class="section-card__header">
+            <h3 class="section-card__title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+              Rules
+            </h3>
+            <span class="section-card__badge section-card__badge--incomplete">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+              Needs content
+            </span>
+          </div>
+          <div class="section-card__content">
+            <div class="empty-state">
+              <p class="empty-state__label">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+                No house rules selected.
+              </p>
+              <p class="empty-state__hint">Define rules around noise, smoking, pets, and other expectations so guests know what to expect before booking.</p>
+            </div>
+            <ul class="mt-8">
+              <li>Gender Preferred: No Preference</li>
+              <li>Max guests: 2</li>
+            </ul>
+          </div>
+          <div class="section-card__actions">
+            <button type="button" class="btn-edit">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+              Edit
+            </button>
+          </div>
+        </section>
+
+        <!-- Availability -->
+        <section class="section-card" aria-label="Availability">
+          <div class="section-card__header">
+            <h3 class="section-card__title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+              Availability
+            </h3>
+            <span class="section-card__badge section-card__badge--complete">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              Done
+            </span>
+          </div>
+          <div class="section-card__content">
+            <div class="details-grid mb-16">
+              <div class="detail-item">
+                <span class="detail-item__label">Lease Term</span>
+                <span class="detail-item__value">6 &ndash; 52 weeks</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-item__label">Earliest Available</span>
+                <span class="detail-item__value">02/05/2026</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-item__label">Check In</span>
+                <span class="detail-item__value">12:00 PM</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-item__label">Check Out</span>
+                <span class="detail-item__value">9:00 AM</span>
+              </div>
+            </div>
+
+            <!-- Progressive disclosure: calendar -->
+            <div class="disclosure">
+              <button type="button" class="disclosure__trigger" aria-expanded="false" aria-controls="calendar-detail" onclick="toggleDisclosure(this)">
+                <span style="display:inline-flex;align-items:center;gap:6px;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                  View calendar &mdash; February 2026
+                </span>
+              </button>
+              <div class="disclosure__body" id="calendar-detail">
+                <p class="text-small text-muted mb-8">Add or remove blocked dates by selecting a range or individual days.</p>
+                <div class="calendar-controls">
+                  <button type="button">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg>
+                    Range
+                  </button>
+                  <button type="button">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle></svg>
+                    Individual dates
+                  </button>
+                </div>
+
+                <p class="text-small mb-8"><strong>Dates blocked by you:</strong> None</p>
+
+                <table class="calendar-table">
+                  <thead>
+                    <tr><th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>01</td><td>02</td><td>03</td><td>04</td><td class="first-available">05</td><td>06</td><td>07</td></tr>
+                    <tr><td>08</td><td>09</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td></tr>
+                    <tr><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td></tr>
+                    <tr><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td></tr>
+                  </tbody>
+                </table>
+                <div class="calendar-legend">
+                  <span><strong style="color: var(--secondary-purple);">05</strong> = First Available</span>
+                  <span>Restricted Weekly</span>
+                  <span>Blocked Manually</span>
+                  <span>Available</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="section-card__actions">
+            <button type="button" class="btn-edit">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+              Edit
+            </button>
+          </div>
+        </section>
+
+        <!-- Cancellation Policy -->
+        <section class="section-card" aria-label="Cancellation Policy">
+          <div class="section-card__header">
+            <h3 class="section-card__title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+              Cancellation Policy
+            </h3>
+            <span class="section-card__badge section-card__badge--complete">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              Done
+            </span>
+          </div>
+          <div class="section-card__content">
+            <p><strong>Standard</strong> &mdash; Standard cancellation policy applies.</p>
+          </div>
+          <div class="section-card__actions">
+            <button type="button" class="btn-edit">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+              Edit
+            </button>
+          </div>
+        </section>
+      </div>
+
+    </main>
+
+
+    <!-- ==========================================================
+         SIDEBAR (right / narrow column)
+         Quick summary card + low-priority promotional items.
+         ========================================================== -->
+    <aside class="sidebar">
+
+      <!-- Quick Summary Card -->
+      <div class="summary-card">
+        <div class="summary-card__title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+          Quick Summary
+        </div>
+        <div class="summary-card__row">
+          <span class="summary-card__label">Status</span>
+          <span class="summary-card__value">Offline</span>
+        </div>
+        <div class="summary-card__row">
+          <span class="summary-card__label">Type</span>
+          <span class="summary-card__value">Private Room</span>
+        </div>
+        <div class="summary-card__row">
+          <span class="summary-card__label">Bedrooms</span>
+          <span class="summary-card__value">1</span>
+        </div>
+        <div class="summary-card__row">
+          <span class="summary-card__label">Bathrooms</span>
+          <span class="summary-card__value">1</span>
+        </div>
+        <div class="summary-card__row">
+          <span class="summary-card__label">Price Range</span>
+          <span class="summary-card__value">$77 &ndash; $102/nt</span>
+        </div>
+        <div class="summary-card__row">
+          <span class="summary-card__label">Lease Style</span>
+          <span class="summary-card__value">Nightly</span>
+        </div>
+        <div class="summary-card__row">
+          <span class="summary-card__label">Availability</span>
+          <span class="summary-card__value">From 02/05/2026</span>
+        </div>
+        <div class="summary-card__row">
+          <span class="summary-card__label">Cancellation</span>
+          <span class="summary-card__value">Standard</span>
+        </div>
+
+        <div class="summary-card__section">
+          <div class="summary-card__section-title">Completion</div>
+          <div class="summary-card__row">
+            <span class="summary-card__label">Sections complete</span>
+            <span class="summary-card__value">4 / 10</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- P3: Low-priority items pushed to sidebar -->
+      <div class="sidebar-low-priority">
+
+        <div class="sidebar-promo">
+          <strong>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+            AI Import Assistant
+          </strong>
+          Speed up setup by importing listing details from another platform.
+          <br><button type="button" class="btn-sidebar mt-8">Open Import Assistant</button>
+        </div>
+
+        <div class="sidebar-promo">
+          <strong>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            Need help setting up?
+          </strong>
+          Our Specialist Co-hosts can help you optimize your listing and attract more quality tenants.
+          <br><a href="#" class="mt-8" style="display: inline-block; margin-top: 8px;">Ask a Specialist</a>
+        </div>
+
+        <div class="sidebar-promo">
+          <strong>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>
+            Refer a Host
+          </strong>
+          Give $50 to a friend, get $50 when they list.
+          <br><a href="#" class="mt-8" style="display: inline-block; margin-top: 8px;">Share your referral link</a>
+        </div>
+
+      </div>
+    </aside>
+
+  </div><!-- /.page-layout -->
+
+</div><!-- /.page-shell -->
+
+
+<!-- ============================================================
+     SCRIPTS — Minimal JS for progressive disclosure and status toggle.
+     No frameworks, no dependencies.
+     ============================================================ -->
+<script>
+/**
+ * Toggle a disclosure panel open/closed.
+ * Updates aria-expanded on the trigger and toggles .is-open on the body.
+ */
+function toggleDisclosure(trigger) {
+  var targetId = trigger.getAttribute('aria-controls');
+  var body = document.getElementById(targetId);
+  var isOpen = trigger.getAttribute('aria-expanded') === 'true';
+
+  trigger.setAttribute('aria-expanded', !isOpen);
+  if (isOpen) {
+    body.classList.remove('is-open');
+  } else {
+    body.classList.add('is-open');
+  }
+}
+
+/**
+ * Toggle listing status between Online and Offline.
+ * Updates the badge text, badge class, and button text.
+ */
+function toggleStatus() {
+  var btn = document.getElementById('statusToggle');
+  var badge = document.getElementById('statusBadge');
+
+  if (btn.textContent.trim().includes('Go Online')) {
+    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg> Go Offline';
+    badge.innerHTML = '<span class="status-badge__dot"></span> Online';
+    badge.classList.remove('status-badge--offline');
+    badge.classList.add('status-badge--online');
+  } else {
+    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg> Go Online';
+    badge.innerHTML = '<span class="status-badge__dot"></span> Offline';
+    badge.classList.remove('status-badge--online');
+    badge.classList.add('status-badge--offline');
+  }
+}
+</script>
+
+</body>
+</html>

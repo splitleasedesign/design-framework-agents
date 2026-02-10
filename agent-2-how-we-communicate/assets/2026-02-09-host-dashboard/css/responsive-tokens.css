@@ -1,0 +1,131 @@
+/* ==========================================================================
+   RESPONSIVE TOKENS -- Split Lease Host Dashboard
+   Agent 2: How We Communicate Information
+   Date: 2026-02-09
+
+   CSS custom properties using clamp() for fluid responsive behavior.
+   Based on RESPONSIVE-DESIGN-MODEL.md patterns and Appendix A measurements.
+
+   Breakpoint reference:
+     320px  - Small phone floor (iPhone SE 1st gen)
+     375px  - Standard phone (iPhone SE 3rd gen)
+     428px  - Large phone (iPhone Pro Max)
+     600px  - Small tablet / landscape phone
+     768px  - Tablet portrait (iPad)
+     1024px - Tablet landscape (iPad landscape)
+     1280px - Laptop
+     1440px - Desktop design ceiling
+   ========================================================================== */
+
+:root {
+  /* ── Color Tokens ──────────────────────────────────────────────────────── */
+  --color-primary:        #31135D;
+  --color-primary-dark:   #23083D;
+  --color-primary-light:  #7B4FB5;
+  --color-primary-bg:     #ECE8F7;
+
+  --color-success:        #00C853;
+  --color-success-bg:     #E8F5E9;
+
+  --color-warning:        #FFC107;
+  --color-warning-bg:     #FFF8E1;
+
+  --color-error:          #D32F2F;
+
+  --color-neutral-50:     #FAFAFA;
+  --color-neutral-100:    #F0F0F0;
+  --color-neutral-200:    #E0E0E0;
+  --color-neutral-600:    #666666;
+  --color-neutral-900:    #1A1A1A;
+  --color-white:          #FFFFFF;
+
+  /* ── Shadow Tokens ─────────────────────────────────────────────────────── */
+  --shadow-sm:  0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md:  0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg:  0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-top: 0 -4px 20px rgba(0, 0, 0, 0.1);
+
+  /* ── Radius Tokens ─────────────────────────────────────────────────────── */
+  --radius-sm:  8px;
+  --radius-md:  12px;
+  --radius-lg:  16px;
+  --radius-pill: 20px;
+  --radius-full: 50%;
+
+  /* ── Spacing Tokens (Fluid) ──────────────────────────────────────────────
+     All resolve to multiples of ~4px at common viewports.
+     Pattern: clamp(min, preferred, max) where preferred uses vw units.
+     ────────────────────────────────────────────────────────────────────── */
+  --space-xs:   clamp(4px, 0.5vw, 8px);    /* 4px @ 320 → 8px @ 1600 */
+  --space-sm:   clamp(8px, 1vw, 12px);     /* 8px @ 320 → 12px @ 1200 */
+  --space-md:   clamp(12px, 2vw, 20px);    /* 12px @ 320 → 20px @ 1000 */
+  --space-lg:   clamp(16px, 3vw, 24px);    /* 16px @ 320 → 24px @ 800 */
+  --space-xl:   clamp(24px, 4vw, 32px);    /* 24px @ 320 → 32px @ 800 */
+  --space-2xl:  clamp(32px, 6vw, 48px);    /* 32px @ 320 → 48px @ 800 */
+
+  /* ── Container Tokens ──────────────────────────────────────────────────── */
+  --container-max-width:  1200px;
+  --container-padding:    clamp(16px, 4vw, 32px);  /* 16px @ 320 → 32px @ 800 */
+
+  /* ── Typography Tokens (Fluid) ───────────────────────────────────────────
+     Headings scale fluidly. Body text stays fixed (already optimal).
+     Pattern: clamp(mobile-min, vw-expression, desktop-max)
+     ────────────────────────────────────────────────────────────────────── */
+  --font-family:     -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --line-height:     1.5;
+  --line-height-tight: 1.25;
+
+  --text-hero:       clamp(22px, 3vw, 28px);         /* Page h1: 22px @ 320 → 28px @ 933 */
+  --text-section:    clamp(16px, 2vw + 0.25rem, 18px);/* Section h2: 16px @ 320 → 18px @ 500 */
+  --text-card-title: clamp(15px, 1.8vw, 16px);       /* Card h3: 15px @ 320 → 16px @ 889 */
+  --text-body:       14px;                             /* Fixed -- optimal at all viewports */
+  --text-small:      13px;                             /* Fixed -- secondary text */
+  --text-micro:      12px;                             /* Fixed -- labels, uppercase (min 12px per taste test Q5) */
+
+  --text-stat-value: clamp(28px, 5vw, 40px);          /* KPI numbers: 28px @ 320 → 40px @ 800 */
+  --text-mini-stat:  18px;                             /* In-card stat values: fixed */
+
+  /* ── Grid Tokens ─────────────────────────────────────────────────────────
+     Auto-fill patterns per RESPONSIVE-DESIGN-MODEL Pattern 2.
+     Using min(100%, Xpx) ensures single-column on narrow viewports.
+     ────────────────────────────────────────────────────────────────────── */
+  --grid-stats-columns:    repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+  --grid-listings-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  --grid-gap:              clamp(12px, 2vw, 20px);
+
+  /* ── Interactive Tokens ────────────────────────────────────────────────── */
+  --touch-target-min:  44px;    /* Apple HIG minimum */
+  --touch-gap-min:     8px;     /* Minimum between adjacent targets */
+  --focus-ring:        2px solid var(--color-primary);
+  --focus-offset:      2px;
+
+  /* ── Transition Tokens ─────────────────────────────────────────────────── */
+  --transition-fast:   0.15s ease;
+  --transition-normal: 0.2s ease;
+
+  /* ── Z-Index Tokens ────────────────────────────────────────────────────── */
+  --z-header:    100;
+  --z-overlay:   200;
+  --z-modal:     300;
+
+  /* ── Card Image Tokens ─────────────────────────────────────────────────── */
+  --card-image-ratio:   16 / 9;   /* Dashboard listing cards */
+  --card-padding:       clamp(12px, 2vw, 16px);
+
+  /* ── Header Tokens ─────────────────────────────────────────────────────── */
+  --header-height:      clamp(56px, auto, 64px);
+  --header-padding-x:   clamp(16px, 4vw, 24px);
+  --header-padding-y:   clamp(12px, 2vw, 16px);
+}
+
+/* ── Reduced Motion ────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

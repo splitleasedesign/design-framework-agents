@@ -1,0 +1,99 @@
+/* ==========================================================================
+   COMPONENT TOKENS — Split Lease Host Dashboard
+   Aligned to: Style-guide.md v2.0 (Paula Scher)
+   Generated: 2026-02-09 by Agent 3 (How it Looks) | Revised for style guide
+
+   SOURCE: design-framework-agents/agent-3-how-it-looks/Style-guide.md
+   Border radius: --rounded-sm (4px) through --rounded-pill (20px)
+   Shadows: production values including purple-tinted shadows
+   Transitions: 0.1s / 0.2s / 0.3s / 0.4s with named easings
+   ========================================================================== */
+
+:root {
+  /* ── Border Radius (Style-guide.md §4) ── */
+  --radius-sm:    4px;     /* --rounded-sm: inputs, subtle rounding */
+  --radius-md:    6px;     /* --rounded-md: standard rounding */
+  --radius-lg:    8px;     /* --rounded-lg: cards, larger elements */
+  --radius-xl:    12px;    /* --rounded-xl: prominent cards */
+  --radius-2xl:   16px;    /* --rounded-2xl: large cards, modals */
+  --radius-pill:  20px;    /* --rounded-pill: pill buttons, badges */
+  --radius-full:  50%;     /* --rounded-full: circles, avatars */
+
+  /* ── Shadows (Style-guide.md §6) ── */
+  --shadow-sm:        0 1px 3px rgba(0, 0, 0, 0.05);
+  --shadow-md:        0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-lg:        0 4px 12px rgba(0, 0, 0, 0.15);
+  --shadow-xl:        0 4px 16px rgba(49, 19, 93, 0.35);
+  --shadow-2xl:       0 6px 24px rgba(49, 19, 93, 0.5);
+
+  /* Purple-tinted shadows */
+  --shadow-purple-sm: 0 2px 4px rgba(49, 19, 93, 0.2);
+  --shadow-purple-md: 0 4px 8px rgba(49, 19, 93, 0.15);
+  --shadow-purple-lg: 0 6px 20px rgba(109, 49, 194, 0.35);
+
+  /* Dark shadows */
+  --shadow-dark-sm:   0 2px 6px rgba(0, 0, 0, 0.2);
+  --shadow-dark-md:   0 4px 8px rgba(0, 0, 0, 0.25);
+
+  /* Inset */
+  --shadow-inset:     inset 0 1px 2px rgba(0, 0, 0, 0.06);
+
+  /* ── Transitions (Style-guide.md §7) ── */
+  --transition-fast:    0.1s ease;     /* Micro-interactions, hover */
+  --transition-base:    0.2s ease;     /* Standard transitions */
+  --transition-slow:    0.3s ease;     /* Deliberate animations */
+  --transition-slower:  0.4s ease;     /* Long animations */
+
+  /* ── Easing Functions (Style-guide.md §7) ── */
+  --easing-ease:         ease;
+  --easing-ease-in:      ease-in;
+  --easing-ease-out:     ease-out;
+  --easing-ease-in-out:  ease-in-out;
+  --easing-linear:       linear;
+
+  /* ── Animation ── */
+  --animation-duration:  1.5s;
+
+  /* ── Focus Ring (Style-guide.md §Accessibility) ── */
+  --focus-ring:         0 0 0 2px var(--color-surface, #fff), 0 0 0 4px var(--color-secondary, rgb(109, 49, 194));
+
+  /* ── Z-Index Scale (Style-guide.md §9) ── */
+  --z-dropdown:   100;
+  --z-sticky:     500;
+  --z-floating:   999;
+  --z-modal:      10000;
+
+  /* ── Opacity (Style-guide.md §10) ── */
+  --opacity-disabled: 0.5;
+  --opacity-hover:    0.8;
+  --opacity-focus:    0.9;
+
+  /* ── Border Widths (Style-guide.md §11) ── */
+  --border-width-thin:  1px;
+  --border-width-md:    1.5px;
+  --border-width-thick: 2px;
+
+  /* ── Layout Constraints ── */
+  --max-width-page:     1280px;   /* --container-lg */
+  --max-width-text:     680px;
+  --max-width-sidebar:  380px;
+  --max-width-modal:    400px;
+  --container-width:    95vw;
+
+  /* ── Sizing (Style-guide.md §8) ── */
+  --icon-xs:      16px;
+  --icon-sm:      20px;
+  --icon-md:      24px;
+  --icon-lg:      28px;
+  --icon-xl:      32px;
+  --icon-2xl:     36px;
+  --icon-3xl:     60px;
+
+  --avatar-sm:    36px;
+  --avatar-md:    48px;
+  --avatar-lg:    80px;
+
+  --input-height:    42px;
+  --input-height-lg: 48px;
+  --input-height-sm: 36px;
+}

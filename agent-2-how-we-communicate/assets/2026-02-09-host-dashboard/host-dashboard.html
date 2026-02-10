@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Host Overview Dashboard | Split Lease</title>
+    <!--
+        AGENT 2: How We Communicate Information
+        Spec-Driven Refactor: Host Overview Dashboard
+        Date: 2026-02-09
+
+        Responsive Design Patterns Applied:
+        - Pattern 1:  Fluid Typography with clamp()
+        - Pattern 2:  Intrinsic Grid Sizing with auto-fill
+        - Pattern 4:  Aspect-Ratio Preservation
+        - Pattern 6:  Responsive Spacing Scale
+        - Pattern 7:  Stack-on-Narrow
+        - Pattern 8:  Touch-Target Minimum (44px)
+        - Pattern 10: Column Drop (onboarding steps)
+        - Pattern 11: Off-Canvas Navigation (mobile)
+        - Pattern 12: Responsive Data Grid / Stats
+        - Pattern 17: Priority+ Navigation
+        - Pattern 20: Reduced Motion Respect
+
+        7 Viewport Targets: 320, 375, 428, 768, 1024, 1280, 1440
+    -->
+    <style>
+        /* ================================================================
+           RESPONSIVE TOKENS
+           ================================================================ */
+        :root {
+            /* Color Tokens */
+            --color-primary:        #31135D;
+            --color-primary-dark:   #23083D;
+            --color-primary-light:  #7B4FB5;
+            --color-primary-bg:     #ECE8F7;
+            --color-success:        #00C853;
+            --color-success-bg:     #E8F5E9;
+            --color-warning:        #FFC107;
+            --color-warning-bg:     #FFF8E1;
+            --color-error:          #D32F2F;
+            --color-neutral-50:     #FAFAFA;
+            --color-neutral-100:    #F0F0F0;
+            --color-neutral-200:    #E0E0E0;
+            --color-neutral-600:    #666666;
+            --color-neutral-900:    #1A1A1A;
+            --color-white:          #FFFFFF;
+
+            /* Shadow Tokens */
+            --shadow-sm:  0 1px 3px rgba(0, 0, 0, 0.08);
+            --shadow-md:  0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg:  0 10px 15px -3px rgba(0, 0, 0, 0.1);
+
+            /* Radius Tokens */
+            --radius-sm:   8px;
+            --radius-md:   12px;
+            --radius-lg:   16px;
+            --radius-pill:  20px;
+            --radius-full: 50%;
+
+            /* Spacing Tokens (Fluid) */
+            --space-xs:   clamp(4px, 0.5vw, 8px);
+            --space-sm:   clamp(8px, 1vw, 12px);
+            --space-md:   clamp(12px, 2vw, 20px);
+            --space-lg:   clamp(16px, 3vw, 24px);
+            --space-xl:   clamp(24px, 4vw, 32px);
+            --space-2xl:  clamp(32px, 6vw, 48px);
+
+            /* Container Tokens */
+            --container-max-width:  1200px;
+            --container-padding:    clamp(16px, 4vw, 32px);
+
+            /* Typography Tokens (Fluid) */
+            --font-family:      -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --line-height:      1.5;
+            --line-height-tight: 1.25;
+            --text-hero:        clamp(22px, 3vw, 28px);
+            --text-section:     clamp(16px, 2vw + 0.25rem, 18px);
+            --text-card-title:  clamp(15px, 1.8vw, 16px);
+            --text-body:        14px;
+            --text-small:       13px;
+            --text-micro:       12px;
+            --text-stat-value:  clamp(28px, 5vw, 40px);
+            --text-mini-stat:   18px;
+
+            /* Grid Tokens */
+            --grid-stats-columns:    repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+            --grid-listings-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+            --grid-gap:              clamp(12px, 2vw, 20px);
+
+            /* Interactive Tokens */
+            --touch-target-min: 44px;
+            --touch-gap-min:    8px;
+            --focus-ring:       2px solid #31135D;
+            --focus-offset:     2px;
+
+            /* Transition Tokens */
+            --transition-fast:   0.15s ease;
+            --transition-normal: 0.2s ease;
+
+            /* Z-Index */
+            --z-header:  100;
+            --z-overlay: 200;
+            --z-modal:   300;
+
+            /* Card Image */
+            --card-image-ratio: 16 / 9;
+            --card-padding:     clamp(12px, 2vw, 16px);
+
+            /* Header */
+            --header-padding-x: clamp(16px, 4vw, 24px);
+            --header-padding-y: clamp(12px, 2vw, 16px);
+        }
+
+        /* ================================================================
+           RESET
+           ================================================================ */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background: var(--color-neutral-100);
+            color: var(--color-neutral-900);
+            line-height: var(--line-height);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ================================================================
+           FOCUS STYLES
+           ================================================================ */
+        :focus-visible {
+            outline: var(--focus-ring);
+            outline-offset: var(--focus-offset);
+        }
+
+        /* ================================================================
+           HEADER
+           ================================================================ */
+        .header {
+            background: var(--color-primary);
+            padding: var(--header-padding-y) var(--header-padding-x);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: var(--z-header);
+        }
+
+        .logo {
+            color: var(--color-white);
+            font-size: 20px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            text-decoration: none;
+        }
+
+        .logo svg { flex-shrink: 0; }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: var(--space-lg);
+        }
+
+        .header-nav-links {
+            display: flex;
+            align-items: center;
+            gap: var(--space-lg);
+            list-style: none;
+        }
+
+        .header-nav-links a {
+            color: var(--color-white);
+            text-decoration: none;
+            font-size: var(--text-body);
+            min-height: var(--touch-target-min);
+            display: inline-flex;
+            align-items: center;
+            transition: opacity var(--transition-fast);
+        }
+
+        .header-nav-links a:hover { opacity: 0.85; }
+
+        .header-nav-links a[aria-current="page"] {
+            border-bottom: 2px solid var(--color-white);
+            padding-bottom: 2px;
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-full);
+            background: var(--color-primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-white);
+            font-weight: 600;
+            font-size: var(--text-body);
+            flex-shrink: 0;
+        }
+
+        /* Hamburger */
+        .hamburger-btn {
+            display: none;
+            width: var(--touch-target-min);
+            height: var(--touch-target-min);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            color: var(--color-white);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hamburger-btn svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Mobile nav overlay */
+        .mobile-nav-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: var(--z-overlay);
+        }
+
+        .mobile-nav-panel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: min(300px, 80vw);
+            background: var(--color-white);
+            z-index: var(--z-modal);
+            padding: var(--space-xl);
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            display: none;
+        }
+
+        .mobile-nav-panel.open {
+            transform: translateX(0);
+        }
+
+        .mobile-nav-panel .close-btn {
+            width: var(--touch-target-min);
+            height: var(--touch-target-min);
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: auto;
+            margin-bottom: var(--space-lg);
+            color: var(--color-neutral-900);
+        }
+
+        .mobile-nav-panel nav a {
+            display: flex;
+            align-items: center;
+            min-height: 48px;
+            padding: var(--space-sm) 0;
+            color: var(--color-neutral-900);
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            border-bottom: 1px solid var(--color-neutral-200);
+        }
+
+        .mobile-nav-panel nav a:hover {
+            color: var(--color-primary);
+        }
+
+        /* ================================================================
+           MAIN
+           ================================================================ */
+        .main {
+            max-width: var(--container-max-width);
+            margin: 0 auto;
+            padding: var(--space-xl) var(--container-padding);
+        }
+
+        /* ================================================================
+           WELCOME SECTION
+           ================================================================ */
+        .welcome-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: var(--space-md);
+            margin-bottom: var(--space-xl);
+        }
+
+        .welcome-text h1 {
+            font-size: var(--text-hero);
+            font-weight: 700;
+            color: var(--color-neutral-900);
+            line-height: var(--line-height-tight);
+            margin-bottom: var(--space-xs);
+        }
+
+        .welcome-text p {
+            color: var(--color-neutral-600);
+            font-size: var(--text-body);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: var(--space-sm);
+            flex-wrap: wrap;
+        }
+
+        /* ================================================================
+           BUTTONS
+           ================================================================ */
+        .btn {
+            padding: 12px 20px;
+            border-radius: var(--radius-sm);
+            font-size: var(--text-body);
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+            min-height: var(--touch-target-min);
+            transition: background var(--transition-normal), box-shadow var(--transition-normal);
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: var(--color-white);
+        }
+
+        .btn-primary:hover { background: var(--color-primary-dark); }
+
+        .btn-secondary {
+            background: var(--color-white);
+            color: var(--color-primary);
+            border: 2px solid var(--color-primary);
+        }
+
+        .btn-secondary:hover { background: var(--color-primary-bg); }
+
+        .btn-with-loading {
+            position: relative;
+            min-width: 140px;
+        }
+
+        .btn-with-loading.loading {
+            pointer-events: none;
+            opacity: 0.8;
+        }
+
+        .btn-with-loading .spinner {
+            display: none;
+            width: 16px;
+            height: 16px;
+            border: 2px solid transparent;
+            border-top-color: var(--color-white);
+            border-radius: var(--radius-full);
+            animation: spin 0.8s linear infinite;
+        }
+
+        .btn-with-loading.loading .spinner { display: block; }
+        .btn-with-loading.loading .btn-text { display: none; }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ================================================================
+           STATS DASHBOARD (KPI Cards)
+           ================================================================ */
+        .stats-dashboard {
+            display: grid;
+            grid-template-columns: var(--grid-stats-columns);
+            gap: var(--grid-gap);
+            margin-bottom: var(--space-xl);
+        }
+
+        .stat-card {
+            background: var(--color-white);
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+        }
+
+        .stat-card.earnings::before { background: var(--color-success); }
+        .stat-card.proposals::before { background: var(--color-warning); }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-sm);
+            flex-wrap: wrap;
+            gap: var(--space-xs);
+        }
+
+        .stat-label {
+            font-size: var(--text-body);
+            color: var(--color-neutral-600);
+        }
+
+        .see-all-link {
+            font-size: var(--text-small);
+            color: var(--color-primary);
+            text-decoration: none;
+            min-height: var(--touch-target-min);
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .see-all-link:hover { text-decoration: underline; }
+
+        .stat-value {
+            font-size: var(--text-stat-value);
+            font-weight: 700;
+            color: var(--color-neutral-900);
+            line-height: var(--line-height-tight);
+            margin-bottom: var(--space-xs);
+        }
+
+        .stat-change {
+            font-size: var(--text-small);
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            color: var(--color-neutral-600);
+            flex-wrap: wrap;
+        }
+
+        .stat-change.positive { color: var(--color-success); }
+
+        /* ================================================================
+           ACTION BANNER
+           ================================================================ */
+        .action-banner {
+            background: linear-gradient(135deg, var(--color-warning-bg) 0%, #FFF3CD 100%);
+            border: 1px solid var(--color-warning);
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-xl);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: var(--space-md);
+        }
+
+        .action-banner-content {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            flex: 1;
+            min-width: 0;
+        }
+
+        .action-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--color-warning);
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+            flex-shrink: 0;
+            color: var(--color-neutral-900);
+        }
+
+        .action-text { min-width: 0; }
+
+        .action-text strong {
+            display: block;
+            font-size: var(--text-body);
+            color: var(--color-neutral-900);
+        }
+
+        .action-text span {
+            font-size: var(--text-small);
+            color: var(--color-neutral-600);
+            display: block;
+        }
+
+        /* ================================================================
+           ONBOARDING SECTION
+           ================================================================ */
+        .onboarding-section {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            color: var(--color-white);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-lg);
+            position: relative;
+        }
+
+        .dismiss-btn {
+            position: absolute;
+            top: var(--space-lg);
+            right: var(--space-lg);
+            width: var(--touch-target-min);
+            height: var(--touch-target-min);
+            border-radius: var(--radius-full);
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: var(--color-white);
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            transition: background var(--transition-fast);
+        }
+
+        .dismiss-btn:hover { background: rgba(255, 255, 255, 0.3); }
+
+        .onboarding-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-lg);
+            padding-right: 52px;
+        }
+
+        .onboarding-title {
+            font-size: var(--text-section);
+            font-weight: 600;
+        }
+
+        .onboarding-progress-text {
+            font-size: var(--text-body);
+            opacity: 0.9;
+            white-space: nowrap;
+        }
+
+        .onboarding-steps {
+            display: flex;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-lg);
+        }
+
+        .onboarding-step {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: var(--radius-sm);
+            padding: var(--space-lg);
+            text-align: center;
+            cursor: pointer;
+            transition: background var(--transition-normal);
+            min-height: var(--touch-target-min);
+        }
+
+        .onboarding-step:hover { background: rgba(255, 255, 255, 0.25); }
+        .onboarding-step.completed { background: rgba(0, 200, 83, 0.3); }
+
+        .step-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-full);
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--space-sm);
+            font-size: 18px;
+        }
+
+        .onboarding-step.completed .step-icon { background: var(--color-success); }
+
+        .step-label {
+            font-size: var(--text-small);
+            font-weight: 500;
+        }
+
+        .next-step-hint {
+            background: rgba(255, 255, 255, 0.1);
+            padding: var(--space-sm) var(--space-lg);
+            border-radius: var(--radius-sm);
+            font-size: var(--text-body);
+        }
+
+        .next-step-hint strong { color: var(--color-warning); }
+
+        /* ================================================================
+           LISTINGS SECTION
+           ================================================================ */
+        .section {
+            background: var(--color-white);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-md);
+            margin-bottom: var(--space-lg);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-md);
+            flex-wrap: wrap;
+            gap: var(--space-sm);
+        }
+
+        .section-title {
+            font-size: var(--text-section);
+            font-weight: 700;
+            color: var(--color-neutral-900);
+        }
+
+        .section-count {
+            color: var(--color-neutral-600);
+            font-size: var(--text-body);
+        }
+
+        .listings-grid {
+            display: grid;
+            grid-template-columns: var(--grid-listings-columns);
+            gap: var(--grid-gap);
+        }
+
+        /* ================================================================
+           LISTING CARD
+           ================================================================ */
+        .listing-card {
+            border: 1px solid var(--color-neutral-200);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            transition: box-shadow var(--transition-normal), transform var(--transition-normal);
+            background: var(--color-white);
+        }
+
+        .listing-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        @media (hover: none) {
+            .listing-card:hover {
+                box-shadow: none;
+                transform: none;
+            }
+        }
+
+        .listing-image {
+            width: 100%;
+            aspect-ratio: var(--card-image-ratio);
+            background: linear-gradient(135deg, var(--color-primary-bg) 0%, var(--color-neutral-200) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .listing-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .listing-status {
+            position: absolute;
+            top: var(--space-sm);
+            right: var(--space-sm);
+            padding: 4px 10px;
+            border-radius: var(--radius-pill);
+            font-size: var(--text-micro);
+            font-weight: 600;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            letter-spacing: 0.5px;
+        }
+
+        .listing-status.online {
+            background: var(--color-success-bg);
+            color: var(--color-success);
+        }
+
+        .listing-status.offline {
+            background: var(--color-neutral-200);
+            color: var(--color-neutral-600);
+        }
+
+        .status-icon {
+            width: 12px;
+            height: 12px;
+            flex-shrink: 0;
+        }
+
+        .listing-content {
+            padding: var(--card-padding);
+        }
+
+        .listing-title {
+            font-size: var(--text-card-title);
+            font-weight: 600;
+            color: var(--color-neutral-900);
+            margin-bottom: var(--space-xs);
+            line-height: var(--line-height);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .listing-location {
+            font-size: var(--text-small);
+            color: var(--color-neutral-600);
+            margin-bottom: var(--space-sm);
+        }
+
+        .listing-mini-stats {
+            display: flex;
+            gap: var(--space-lg);
+            padding: var(--space-sm) 0;
+            border-top: 1px solid var(--color-neutral-200);
+            border-bottom: 1px solid var(--color-neutral-200);
+            margin-bottom: var(--space-sm);
+        }
+
+        .mini-stat {
+            text-align: center;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .mini-stat-value {
+            font-size: var(--text-mini-stat);
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+
+        .mini-stat-label {
+            font-size: var(--text-micro);
+            color: var(--color-neutral-600);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .listing-actions {
+            display: flex;
+            gap: var(--touch-gap-min);
+        }
+
+        .listing-actions .btn {
+            flex: 1;
+            justify-content: center;
+            padding: 10px 12px;
+            font-size: var(--text-small);
+            min-height: var(--touch-target-min);
+        }
+
+        .proposal-badge {
+            background: var(--color-primary);
+            color: var(--color-white);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 4px;
+        }
+
+        /* ================================================================
+           RESPONSIVE: Below 768px (mobile)
+           ================================================================ */
+        @media (max-width: 767px) {
+            .header-nav-links {
+                display: none;
+            }
+
+            .hamburger-btn {
+                display: flex;
+            }
+
+            /* Show mobile nav infrastructure */
+            .mobile-nav-overlay.active {
+                display: block;
+            }
+
+            .mobile-nav-panel.active {
+                display: block;
+            }
+
+            .mobile-nav-panel.active.open {
+                transform: translateX(0);
+            }
+
+            /* Onboarding: vertical */
+            .onboarding-steps {
+                flex-direction: column;
+                gap: var(--space-sm);
+            }
+
+            .onboarding-step {
+                display: flex;
+                align-items: center;
+                gap: var(--space-sm);
+                text-align: left;
+                padding: var(--space-sm) var(--space-md);
+            }
+
+            .step-icon {
+                margin: 0;
+                flex-shrink: 0;
+                width: 36px;
+                height: 36px;
+                font-size: 16px;
+            }
+
+            .onboarding-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--space-xs);
+                padding-right: 52px;
+            }
+        }
+
+        /* ================================================================
+           RESPONSIVE: Below 600px (small mobile)
+           ================================================================ */
+        @media (max-width: 599px) {
+            .welcome-section {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .action-buttons {
+                flex-direction: row;
+                width: 100%;
+            }
+
+            .action-buttons .btn {
+                flex: 1;
+                justify-content: center;
+                font-size: var(--text-small);
+                padding: 12px 12px;
+            }
+
+            .action-banner {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .action-banner .btn-with-loading {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* ================================================================
+           REDUCED MOTION
+           ================================================================ */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+            .listing-card:hover { transform: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================================================================
+         HEADER
+         ================================================================ -->
+    <header class="header">
+        <a href="#" class="logo" aria-label="Split Lease Home">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <circle cx="12" cy="12" r="10" stroke="white" stroke-width="2"/>
+                <path d="M8 12h8M12 8v8" stroke="white" stroke-width="2"/>
+            </svg>
+            Split Lease
+        </a>
+        <div class="header-right">
+            <ul class="header-nav-links">
+                <li><a href="#" aria-current="page">Host Overview</a></li>
+                <li><a href="#">Messages</a></li>
+            </ul>
+            <div class="avatar" aria-label="Rod's profile">R</div>
+            <button class="hamburger-btn" aria-label="Open navigation menu" onclick="openMobileNav()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <line x1="3" y1="6" x2="21" y2="6"/>
+                    <line x1="3" y1="12" x2="21" y2="12"/>
+                    <line x1="3" y1="18" x2="21" y2="18"/>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile nav overlay -->
+    <div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="closeMobileNav()"></div>
+    <div class="mobile-nav-panel" id="mobileNavPanel">
+        <button class="close-btn" aria-label="Close navigation menu" onclick="closeMobileNav()">&times;</button>
+        <nav>
+            <a href="#">Host Overview</a>
+            <a href="#">Messages</a>
+            <a href="#">Account Settings</a>
+            <a href="#">Help Center</a>
+            <a href="#">Log Out</a>
+        </nav>
+    </div>
+
+    <!-- ================================================================
+         MAIN CONTENT
+         ================================================================ -->
+    <main class="main">
+
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+            <div class="welcome-text">
+                <h1>Welcome back, Rod</h1>
+                <p>Here's what's happening with your listings today</p>
+            </div>
+            <div class="action-buttons">
+                <button class="btn btn-primary">+ Create New Listing</button>
+                <button class="btn btn-secondary">Import Listing</button>
+            </div>
+        </div>
+
+        <!-- KPI Stats: 2 Primary Metrics -->
+        <div class="stats-dashboard">
+            <div class="stat-card earnings">
+                <div class="stat-header">
+                    <span class="stat-label">This Month's Earnings</span>
+                    <a href="#" class="see-all-link">See all stats &rarr;</a>
+                </div>
+                <div class="stat-value">$2,847</div>
+                <div class="stat-change positive">
+                    <span>+12%</span> vs last month &middot; 78% occupancy
+                </div>
+            </div>
+            <div class="stat-card proposals">
+                <div class="stat-header">
+                    <span class="stat-label">Proposals Needing Action</span>
+                </div>
+                <div class="stat-value">2</div>
+                <div class="stat-change">
+                    <span>3 total pending &middot; 4.9 avg rating</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Required Banner -->
+        <div class="action-banner" role="alert">
+            <div class="action-banner-content">
+                <div class="action-icon" aria-hidden="true">!</div>
+                <div class="action-text">
+                    <strong>2 proposals need your attention</strong>
+                    <span>Leo Di Caprio submitted a new proposal for Sunny Private Room</span>
+                </div>
+            </div>
+            <button class="btn btn-primary btn-with-loading" onclick="this.classList.add('loading')">
+                <span class="btn-text">Review Proposals</span>
+                <span class="spinner"></span>
+            </button>
+        </div>
+
+        <!-- Onboarding Progress (Dismissible) -->
+        <div class="onboarding-section" id="onboarding">
+            <button class="dismiss-btn" onclick="document.getElementById('onboarding').style.display='none'" aria-label="Dismiss onboarding section">&times;</button>
+            <div class="onboarding-header">
+                <div class="onboarding-title">Complete Your Host Profile</div>
+                <div class="onboarding-progress-text">3 of 5 steps completed</div>
+            </div>
+            <div class="onboarding-steps">
+                <div class="onboarding-step completed">
+                    <div class="step-icon">&#10003;</div>
+                    <div class="step-label">Create Listing</div>
+                </div>
+                <div class="onboarding-step completed">
+                    <div class="step-icon">&#10003;</div>
+                    <div class="step-label">Add Photos</div>
+                </div>
+                <div class="onboarding-step completed">
+                    <div class="step-icon">&#10003;</div>
+                    <div class="step-label">Set Pricing</div>
+                </div>
+                <div class="onboarding-step">
+                    <div class="step-icon">&#128221;</div>
+                    <div class="step-label">House Manual</div>
+                </div>
+                <div class="onboarding-step">
+                    <div class="step-icon">&#9989;</div>
+                    <div class="step-label">Go Live</div>
+                </div>
+            </div>
+            <div class="next-step-hint">
+                <strong>Next:</strong> Add a House Manual to help guests understand your space rules and amenities.
+            </div>
+        </div>
+
+        <!-- Listings Section -->
+        <section class="section">
+            <div class="section-header">
+                <h2 class="section-title">Your Listings</h2>
+                <span class="section-count">3 listings</span>
+            </div>
+            <div class="listings-grid">
+
+                <!-- Listing Card 1: Online -->
+                <article class="listing-card">
+                    <div class="listing-image">
+                        <div class="listing-status online">
+                            <svg class="status-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+                            </svg>
+                            Online
+                        </div>
+                    </div>
+                    <div class="listing-content">
+                        <h3 class="listing-title">Sunny Private Room Near Central Park</h3>
+                        <p class="listing-location">Manhattan, NY</p>
+                        <div class="listing-mini-stats">
+                            <div class="mini-stat">
+                                <div class="mini-stat-value">$1,240</div>
+                                <div class="mini-stat-label">This Month</div>
+                            </div>
+                            <div class="mini-stat">
+                                <div class="mini-stat-value">85%</div>
+                                <div class="mini-stat-label">Occupancy</div>
+                            </div>
+                            <div class="mini-stat">
+                                <div class="mini-stat-value">2</div>
+                                <div class="mini-stat-label">Proposals</div>
+                            </div>
+                        </div>
+                        <div class="listing-actions">
+                            <button class="btn btn-primary">Manage</button>
+                            <button class="btn btn-secondary">
+                                Proposals <span class="proposal-badge">2</span>
+                            </button>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Listing Card 2: Offline -->
+                <article class="listing-card">
+                    <div class="listing-image">
+                        <div class="listing-status offline">
+                            <svg class="status-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                            </svg>
+                            Offline
+                        </div>
+                    </div>
+                    <div class="listing-content">
+                        <h3 class="listing-title">1 Bedroom Entire Place in Manhattan</h3>
+                        <p class="listing-location">Manhattan, NY</p>
+                        <div class="listing-mini-stats">
+                            <div class="mini-stat">
+                                <div class="mini-stat-value">$890</div>
+                                <div class="mini-stat-label">This Month</div>
+                            </div>
+                            <div class="mini-stat">
+                                <div class="mini-stat-value">62%</div>
+                                <div class="mini-stat-label">Occupancy</div>
+                            </div>
+                            <div class="mini-stat">
+                                <div class="mini-stat-value">1</div>
+                                <div class="mini-stat-label">Proposals</div>
+                            </div>
+                        </div>
+                        <div class="listing-actions">
+                            <button class="btn btn-primary">Manage</button>
+                            <button class="btn btn-secondary">
+                                Proposals <span class="proposal-badge">1</span>
+                            </button>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Listing Card 3: Online -->
+                <article class="listing-card">
+                    <div class="listing-image">
+                        <div class="listing-status online">
+                            <svg class="status-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+                            </svg>
+                            Online
+                        </div>
+                    </div>
+                    <div class="listing-content">
+                        <h3 class="listing-title">1 Bedroom Private Room in Manhattan</h3>
+                        <p class="listing-location">Manhattan, NY</p>
+                        <div class="listing-mini-stats">
+                            <div class="mini-stat">
+                                <div class="mini-stat-value">$717</div>
+                                <div class="mini-stat-label">This Month</div>
+                            </div>
+                            <div class="mini-stat">
+                                <div class="mini-stat-value">71%</div>
+                                <div class="mini-stat-label">Occupancy</div>
+                            </div>
+                            <div class="mini-stat">
+                                <div class="mini-stat-value">0</div>
+                                <div class="mini-stat-label">Proposals</div>
+                            </div>
+                        </div>
+                        <div class="listing-actions">
+                            <button class="btn btn-primary">Manage</button>
+                            <button class="btn btn-secondary">Proposals</button>
+                        </div>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ================================================================
+         JAVASCRIPT: Mobile nav toggle
+         ================================================================ -->
+    <script>
+        function openMobileNav() {
+            const overlay = document.getElementById('mobileNavOverlay');
+            const panel = document.getElementById('mobileNavPanel');
+            overlay.classList.add('active');
+            panel.classList.add('active');
+            // Trigger reflow for transition
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    panel.classList.add('open');
+                });
+            });
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMobileNav() {
+            const overlay = document.getElementById('mobileNavOverlay');
+            const panel = document.getElementById('mobileNavPanel');
+            panel.classList.remove('open');
+            setTimeout(() => {
+                overlay.classList.remove('active');
+                panel.classList.remove('active');
+                document.body.style.overflow = '';
+            }, 300);
+        }
+
+        // Close mobile nav on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeMobileNav();
+        });
+    </script>
+
+</body>
+</html>

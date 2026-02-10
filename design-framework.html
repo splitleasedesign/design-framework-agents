@@ -1,0 +1,1420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design Framework Agents — Automated Design Processes</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface-2: #242833;
+    --border: #2e3340;
+    --text: #e4e6ed;
+    --text-muted: #8b8fa3;
+    --accent-1: #6C9CFF;
+    --accent-2: #7EE8A8;
+    --accent-3: #E8A87E;
+    --accent-4: #D47EE8;
+    --accent-orch: #FFD166;
+    --code-bg: #161922;
+    --green: #7EE8A8;
+    --red: #FF6B6B;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* --- HEADER --- */
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(15, 17, 23, 0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+  }
+
+  .header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    height: 64px;
+  }
+
+  .header-title {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+    color: var(--text);
+  }
+
+  .header-title span { color: var(--text-muted); font-weight: 400; }
+
+  /* --- NAV TABS --- */
+  .nav-tabs {
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .nav-tabs::-webkit-scrollbar { display: none; }
+
+  .nav-tab {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+    background: transparent;
+    font-family: inherit;
+  }
+
+  .nav-tab:hover {
+    color: var(--text);
+    background: var(--surface);
+  }
+
+  .nav-tab.active {
+    color: var(--text);
+    background: var(--surface-2);
+    border-color: var(--border);
+  }
+
+  .nav-tab[data-agent="orchestrator"].active { border-color: var(--accent-orch); color: var(--accent-orch); }
+  .nav-tab[data-agent="agent-1"].active { border-color: var(--accent-1); color: var(--accent-1); }
+  .nav-tab[data-agent="agent-2"].active { border-color: var(--accent-2); color: var(--accent-2); }
+  .nav-tab[data-agent="agent-3"].active { border-color: var(--accent-3); color: var(--accent-3); }
+  .nav-tab[data-agent="agent-4"].active { border-color: var(--accent-4); color: var(--accent-4); }
+
+  /* --- PANELS --- */
+  .agent-panel {
+    display: none;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 32px 80px;
+  }
+
+  .agent-panel.active { display: block; }
+
+  /* --- OVERVIEW HERO --- */
+  .overview-hero {
+    margin-bottom: 40px;
+  }
+
+  .overview-hero h1 {
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+    margin-bottom: 12px;
+  }
+
+  .overview-hero p {
+    font-size: 17px;
+    color: var(--text-muted);
+    max-width: 700px;
+    line-height: 1.6;
+  }
+
+  /* --- PILLAR CARDS (overview) --- */
+  .pillar-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+
+  .pillar-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pillar-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+
+  .pillar-card:nth-child(1)::before { background: var(--accent-orch); }
+  .pillar-card:nth-child(2)::before { background: var(--accent-1); }
+  .pillar-card:nth-child(3)::before { background: var(--accent-2); }
+  .pillar-card:nth-child(4)::before { background: var(--accent-3); }
+  .pillar-card:nth-child(5)::before { background: var(--accent-4); }
+
+  .pillar-card:hover {
+    border-color: #444;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  }
+
+  .pillar-card .pillar-num {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+  }
+
+  .pillar-card:nth-child(1) .pillar-num { color: var(--accent-orch); }
+  .pillar-card:nth-child(2) .pillar-num { color: var(--accent-1); }
+  .pillar-card:nth-child(3) .pillar-num { color: var(--accent-2); }
+  .pillar-card:nth-child(4) .pillar-num { color: var(--accent-3); }
+  .pillar-card:nth-child(5) .pillar-num { color: var(--accent-4); }
+
+  .pillar-card h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+
+  .pillar-card .pillar-desc {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin-bottom: 12px;
+  }
+
+  .pillar-card .pillar-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .pillar-tag {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    background: var(--surface-2);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+  }
+
+  /* --- AGENT HEADER --- */
+  .agent-header {
+    margin-bottom: 40px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .agent-header .agent-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+  }
+
+  .agent-header[data-accent="orch"] .agent-badge { background: rgba(255,209,102,0.15); color: var(--accent-orch); }
+  .agent-header[data-accent="1"] .agent-badge    { background: rgba(108,156,255,0.15); color: var(--accent-1); }
+  .agent-header[data-accent="2"] .agent-badge    { background: rgba(126,232,168,0.15); color: var(--accent-2); }
+  .agent-header[data-accent="3"] .agent-badge    { background: rgba(232,168,126,0.15); color: var(--accent-3); }
+  .agent-header[data-accent="4"] .agent-badge    { background: rgba(212,126,232,0.15); color: var(--accent-4); }
+
+  .agent-header h1 {
+    font-size: clamp(24px, 3.5vw, 36px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 4px;
+  }
+
+  .agent-header .agent-meta {
+    font-size: 15px;
+    color: var(--text-muted);
+  }
+
+  .agent-header .agent-meta strong { color: var(--text); }
+
+  /* --- MARKDOWN CONTENT --- */
+  .md-content h2 {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 40px 0 16px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    letter-spacing: -0.01em;
+  }
+
+  .md-content h2:first-child { border-top: none; padding-top: 0; margin-top: 0; }
+
+  .md-content h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin: 24px 0 8px;
+    color: var(--text);
+  }
+
+  .md-content p {
+    margin: 8px 0 16px;
+    font-size: 15px;
+    color: var(--text-muted);
+    max-width: 72ch;
+  }
+
+  .md-content ul, .md-content ol {
+    margin: 8px 0 16px 20px;
+    font-size: 15px;
+    color: var(--text-muted);
+  }
+
+  .md-content li { margin-bottom: 6px; }
+  .md-content li strong { color: var(--text); }
+
+  .md-content code {
+    font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+    font-size: 13px;
+    background: var(--code-bg);
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    color: var(--accent-2);
+  }
+
+  .md-content pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 20px;
+    overflow-x: auto;
+    margin: 12px 0 20px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .md-content pre code {
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--text-muted);
+  }
+
+  /* --- TABLES --- */
+  .md-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0 20px;
+    font-size: 14px;
+  }
+
+  .md-content th {
+    text-align: left;
+    padding: 10px 16px;
+    background: var(--surface-2);
+    color: var(--text);
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .md-content th:first-child { border-radius: var(--radius-sm) 0 0 0; }
+  .md-content th:last-child { border-radius: 0 var(--radius-sm) 0 0; }
+
+  .md-content td {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-muted);
+  }
+
+  .md-content tr:last-child td { border-bottom: none; }
+
+  .md-content .table-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    overflow-x: auto;
+  }
+
+  /* --- CHECKLIST --- */
+  .md-content .checklist {
+    list-style: none;
+    margin-left: 0;
+    padding-left: 0;
+  }
+
+  .md-content .checklist li {
+    padding: 8px 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    margin-bottom: 6px;
+    font-size: 14px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .md-content .checklist li::before {
+    content: '';
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  /* --- BEHAVIOR CARDS --- */
+  .behavior-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 12px 0 20px;
+  }
+
+  @media (max-width: 640px) {
+    .behavior-grid { grid-template-columns: 1fr; }
+  }
+
+  .behavior-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 20px;
+  }
+
+  .behavior-card h4 {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 12px;
+  }
+
+  .behavior-card.always h4 { color: var(--green); }
+  .behavior-card.never h4 { color: var(--red); }
+
+  .behavior-card ul {
+    margin: 0;
+    padding-left: 16px;
+    font-size: 14px;
+  }
+
+  .behavior-card li { margin-bottom: 6px; color: var(--text-muted); }
+
+  /* --- COMPOUND ACTION TREE --- */
+  .compound-tree {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin: 12px 0 24px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+    font-size: 13px;
+    line-height: 1.7;
+    overflow-x: auto;
+  }
+
+  .compound-tree .phase-label {
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .compound-tree .tree-line {
+    color: var(--text-muted);
+  }
+
+  .compound-tree .tree-line .hl-green { color: var(--green); }
+  .compound-tree .tree-line .hl-red { color: var(--red); }
+  .compound-tree .tree-line .hl-accent { color: var(--accent-2); }
+  .compound-tree .tree-line .hl-blue { color: var(--accent-1); }
+  .compound-tree .tree-line .hl-orange { color: var(--accent-3); }
+  .compound-tree .tree-line .hl-purple { color: var(--accent-4); }
+
+  /* --- RESOURCE CALLOUT --- */
+  .resource-callout {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent-2);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: 20px 24px;
+    margin: 16px 0 24px;
+  }
+
+  .resource-callout h4 {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--accent-2);
+  }
+
+  .resource-callout p {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin: 0;
+  }
+
+  .resource-callout ul {
+    margin: 8px 0 0 16px;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  /* --- OUTPUT FILES BLOCK --- */
+  .output-tree {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 20px 24px;
+    margin: 12px 0 20px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--text-muted);
+    overflow-x: auto;
+  }
+
+  .output-tree .folder { color: var(--accent-1); font-weight: 600; }
+  .output-tree .file { color: var(--text-muted); }
+  .output-tree .comment { color: #555b6e; }
+
+  /* --- DIAGRAM BOX --- */
+  .diagram-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px;
+    overflow-x: auto;
+    margin: 12px 0 24px;
+  }
+
+  .diagram-box pre {
+    font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text-muted);
+    white-space: pre;
+  }
+
+  /* --- PRIORITY BAR --- */
+  .priority-bar {
+    display: flex;
+    border-radius: var(--radius);
+    overflow: hidden;
+    height: 40px;
+    border: 1px solid var(--border);
+    margin: 12px 0 8px;
+  }
+
+  .priority-bar div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  .priority-bar .p-works     { background: rgba(108,156,255,0.2); color: var(--accent-1); flex: 4; }
+  .priority-bar .p-comm      { background: rgba(126,232,168,0.2); color: var(--accent-2); flex: 3; }
+  .priority-bar .p-feels     { background: rgba(212,126,232,0.2); color: var(--accent-4); flex: 2; }
+  .priority-bar .p-looks     { background: rgba(232,168,126,0.2); color: var(--accent-3); flex: 1; }
+
+  /* --- PATTERN BLOCK --- */
+  .pattern-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin: 16px 0 24px;
+  }
+
+  .pattern-block h4 {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--text);
+  }
+
+  .pattern-step {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    margin-bottom: 12px;
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+
+  .pattern-step:last-child { margin-bottom: 0; }
+
+  .step-num {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text);
+    flex-shrink: 0;
+  }
+
+  /* --- FOOTER --- */
+  .site-footer {
+    border-top: 1px solid var(--border);
+    padding: 24px 32px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  /* --- RESPONSIVE --- */
+  @media (max-width: 768px) {
+    .header-inner { padding: 0; gap: 16px; }
+    .site-header { padding: 0 16px; }
+    .agent-panel { padding-left: 16px; padding-right: 16px; }
+    .agent-header h1 { font-size: 24px; }
+    .behavior-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-title">Design Framework <span>/ Automated Agents</span></div>
+    <nav class="nav-tabs" id="nav-tabs">
+      <button class="nav-tab active" data-agent="overview" onclick="showPanel('overview')">Overview</button>
+      <button class="nav-tab" data-agent="orchestrator" onclick="showPanel('orchestrator')">Orchestrator</button>
+      <button class="nav-tab" data-agent="agent-1" onclick="showPanel('agent-1')">1 &middot; Works</button>
+      <button class="nav-tab" data-agent="agent-2" onclick="showPanel('agent-2')">2 &middot; Communicates</button>
+      <button class="nav-tab" data-agent="agent-3" onclick="showPanel('agent-3')">3 &middot; Looks</button>
+      <button class="nav-tab" data-agent="agent-4" onclick="showPanel('agent-4')">4 &middot; Feels</button>
+    </nav>
+  </div>
+</header>
+
+
+<!-- ==================== OVERVIEW ==================== -->
+<div class="agent-panel active" id="panel-overview">
+
+  <div class="overview-hero">
+    <h1>Automated Design Process Agents</h1>
+    <p>4 autonomous agents that take inputs, run compound actions, self-evaluate against calibration documents, and iterate until the eval passes. They produce concrete deliverables &mdash; CSS tokens, responsive screenshots, flow maps, copy systems &mdash; not opinions. Designed for overnight, unattended execution.</p>
+  </div>
+
+  <!-- AGENT CARDS -->
+  <div class="pillar-grid">
+    <div class="pillar-card" onclick="showPanel('orchestrator')">
+      <div class="pillar-num">Orchestrator</div>
+      <h3>Fan-Out + Synthesis</h3>
+      <p class="pillar-desc">Writes prompts to all 4 agents, fans out work in parallel, collects results, synthesizes cross-pillar findings.</p>
+      <div class="pillar-tags">
+        <span class="pillar-tag">Fan-Out</span>
+        <span class="pillar-tag">Synthesis</span>
+        <span class="pillar-tag">Overnight Runs</span>
+      </div>
+    </div>
+    <div class="pillar-card" onclick="showPanel('agent-1')">
+      <div class="pillar-num">Agent 1</div>
+      <h3>How it Works</h3>
+      <p class="pillar-desc">Automates flow mapping, process audits, goal-directed redesign. Plan-Act-Verify loop with eval criteria self-check.</p>
+      <div class="pillar-tags">
+        <span class="pillar-tag">Plan-Act-Verify</span>
+        <span class="pillar-tag">Flow Maps</span>
+        <span class="pillar-tag">Error Recovery</span>
+      </div>
+    </div>
+    <div class="pillar-card" onclick="showPanel('agent-2')">
+      <div class="pillar-num">Agent 2</div>
+      <h3>How we Communicate</h3>
+      <p class="pillar-desc">Automates layout specs, responsive CSS, Playwright-verified responsive design across 7 viewports.</p>
+      <div class="pillar-tags">
+        <span class="pillar-tag">Spec-Driven Refactor</span>
+        <span class="pillar-tag">Playwright</span>
+        <span class="pillar-tag">7 Viewports</span>
+      </div>
+    </div>
+    <div class="pillar-card" onclick="showPanel('agent-3')">
+      <div class="pillar-num">Agent 3</div>
+      <h3>How it Looks</h3>
+      <p class="pillar-desc">Automates color systems, typography scales, spacing tokens, visual CSS generation. TDD Sandbox with Taste Test as test suite.</p>
+      <div class="pillar-tags">
+        <span class="pillar-tag">TDD Sandbox</span>
+        <span class="pillar-tag">CSS Tokens</span>
+        <span class="pillar-tag">WCAG AA</span>
+      </div>
+    </div>
+    <div class="pillar-card" onclick="showPanel('agent-4')">
+      <div class="pillar-num">Agent 4</div>
+      <h3>How it Feels</h3>
+      <p class="pillar-desc">Automates emotional journey maps, copy systems, personality guides. 3 approaches per gap via Adversarial Architect.</p>
+      <div class="pillar-tags">
+        <span class="pillar-tag">Evidence-Gap Probe</span>
+        <span class="pillar-tag">Copy System</span>
+        <span class="pillar-tag">Adversarial Architect</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPOUND ACTION LOOP -->
+  <div class="md-content">
+    <h2>The Compound Action Loop</h2>
+    <p>Every agent runs this autonomously. The eval loop is what burns tokens &mdash; agents don't stop when they "finish," they stop when the <strong>target is met</strong>.</p>
+    <div class="compound-tree">
+      <div class="tree-line"><span class="hl-blue">INPUT</span> (page, component, HTML file, flow)</div>
+      <div class="tree-line">  &darr;</div>
+      <div class="tree-line"><span class="phase-label">PLAN</span> &mdash; Read input + calibration doc &rarr; generate execution plan</div>
+      <div class="tree-line">  &darr;</div>
+      <div class="tree-line"><span class="phase-label">ACT</span> &mdash; Execute step by step &rarr; produce files (CSS, md, screenshots)</div>
+      <div class="tree-line">  &darr;</div>
+      <div class="tree-line"><span class="phase-label">EVAL</span> &mdash; Score output against calibration doc</div>
+      <div class="tree-line">  &boxvr;&mdash; <span class="hl-green">PASS</span> &rarr; Save output, update memory, report done</div>
+      <div class="tree-line">  &boxur;&mdash; <span class="hl-red">FAIL</span> &rarr; Diagnose &rarr; adjust approach &rarr; retry ACT (max 3x)</div>
+    </div>
+
+    <!-- OVERNIGHT EXECUTION -->
+    <h2>Overnight Execution Model</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tactic</th><th>How It Applies</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Compound Actions</strong></td><td>One prompt expands into 7&ndash;10 autonomous steps</td></tr>
+          <tr><td><strong>Eval Loops</strong></td><td>Agent keeps iterating until target score is met</td></tr>
+          <tr><td><strong>Concrete Outputs</strong></td><td>Files saved to disk (CSS, MD, screenshots), not conversation</td></tr>
+          <tr><td><strong>Self-Correction</strong></td><td>Failed eval &rarr; diagnose &rarr; retry (up to 3x)</td></tr>
+          <tr><td><strong>Token Budgets</strong></td><td>0.5M&ndash;5M per task type, prevents runaway</td></tr>
+          <tr><td><strong>Fan-Out</strong></td><td>Orchestrator assigns all 4 in parallel, synthesis after</td></tr>
+          <tr><td><strong>Memory Logging</strong></td><td>Every session writes decisions, patterns, outcomes to memory.md</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="compound-tree" style="font-size: 13px;">
+      <div class="tree-line"><span class="phase-label">Evening:</span></div>
+      <div class="tree-line">  1. Load orchestrator &rarr; write prompts to all 4 agents</div>
+      <div class="tree-line">  2. Start each agent in a separate tab/session</div>
+      <div class="tree-line">  3. Each agent runs its compound action autonomously</div>
+      <div class="tree-line">&nbsp;</div>
+      <div class="tree-line"><span class="phase-label">Morning:</span></div>
+      <div class="tree-line">  4. Read memory.md files for outcomes</div>
+      <div class="tree-line">  5. Check assets/ folders for deliverables</div>
+      <div class="tree-line">  6. Orchestrator synthesizes cross-pillar results</div>
+    </div>
+
+    <!-- CONCRETE OUTPUTS -->
+    <h2>What Each Agent Produces</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Agent</th><th>Concrete Outputs</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Agent 1</strong></td><td><code>flow-map-[feature].md</code>, <code>goal-analysis.md</code>, <code>proposed-flow.md</code>, <code>error-recovery-matrix.md</code></td></tr>
+          <tr><td><strong>Agent 2</strong></td><td><code>responsive-tokens.css</code>, <code>layout-overrides.css</code>, <code>hierarchy-map.md</code>, Playwright screenshots (7 viewports)</td></tr>
+          <tr><td><strong>Agent 3</strong></td><td><code>color-tokens.css</code>, <code>typography-tokens.css</code>, <code>spacing-tokens.css</code>, <code>visual-system.css</code>, <code>taste-test-score.md</code></td></tr>
+          <tr><td><strong>Agent 4</strong></td><td><code>emotion-map.md</code>, <code>copy-system.md</code>, <code>success-messages.md</code>, <code>error-messages.md</code>, <code>personality-guide.md</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- DEPENDENCY DIAGRAM -->
+    <h2>Cross-Agent Dependencies</h2>
+    <div class="diagram-box">
+      <pre>
+                    &#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;
+                    &#9474;   ORCHESTRATOR       &#9474;
+                    &#9474;   Fan-out + Synthesis &#9474;
+                    &#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9516;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;
+                              &#9474;
+         &#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9524;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;
+         &#9474;                    &#9474;                     &#9474;
+    &#9484;&#9472;&#9472;&#9472;&#9472;&#9660;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;    &#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9660;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;    &#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9660;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;
+    &#9474; Agent 1  &#9474;    &#9474; Agent 2         &#9474;    &#9474; Agent 3      &#9474;
+    &#9474; Flows    &#9474;&#9472;&#9472;&#9472;&#9654;&#9474; Layout + CSS    &#9474;&#9472;&#9472;&#9472;&#9654;&#9474; Visual       &#9474;
+    &#9474;          &#9474;    &#9474; + Playwright    &#9474;    &#9474; Tokens + CSS &#9474;
+    &#9492;&#9472;&#9472;&#9472;&#9472;&#9516;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;    &#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9516;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;    &#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9516;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;
+         &#9474;                   &#9474;                     &#9474;
+         &#9474;          &#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9660;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;            &#9474;
+         &#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9654;&#9474; Agent 4         &#9474;&#9668;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;
+                    &#9474; Emotion + Copy  &#9474;
+                    &#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;</pre>
+    </div>
+    <p><strong>Agents 1, 2, 3 run in parallel.</strong> Agent 4 integrates after.</p>
+
+    <!-- CONFLICT RESOLUTION -->
+    <h2>Default Conflict Resolution Priority</h2>
+    <div class="priority-bar">
+      <div class="p-works">Works</div>
+      <div class="p-comm">Communicates</div>
+      <div class="p-feels">Feels</div>
+      <div class="p-looks">Looks</div>
+    </div>
+    <p style="font-size:13px;color:var(--text-muted);margin-top:4px;">Goal: never sacrifice a pillar &mdash; find where all 4 are strong.</p>
+
+    <!-- CALIBRATION DOCUMENTS -->
+    <h2>Calibration Documents</h2>
+    <p>Each agent has a calibration doc that serves as its <strong>eval target</strong> &mdash; like test cases in TDD.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Agent</th><th>Calibration Doc</th><th>What It Provides</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Agent 2</strong></td><td><code>RESPONSIVE-DESIGN-MODEL.md</code></td><td>30-question responsive taste test, 20 patterns, 15 anti-patterns</td></tr>
+          <tr><td><strong>Agent 3</strong></td><td><code>DESIGN-TASTE-MODEL.md</code></td><td>30-question visual taste test, 20 patterns, 15 anti-patterns</td></tr>
+          <tr><td><strong>Agent 1, 4</strong></td><td>Eval criteria checklists</td><td>Built-in self-check criteria (10 items each)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- HOW TO START -->
+    <h2>Starting an Agent</h2>
+    <pre><code>You are [path]/agent.md</code></pre>
+    <p>Then: <strong>"read prompt.md"</strong> &mdash; the agent executes its compound action autonomously until the eval passes.</p>
+  </div>
+</div>
+
+
+<!-- ==================== ORCHESTRATOR ==================== -->
+<div class="agent-panel" id="panel-orchestrator">
+  <div class="agent-header" data-accent="orch">
+    <span class="agent-badge">Orchestrator</span>
+    <h1>Design Framework Orchestrator</h1>
+    <div class="agent-meta"><strong>Domain:</strong> Automated Design Process Coordination &nbsp;&middot;&nbsp; <strong>Pattern:</strong> Fan-Out Orchestrator + Synthesis</div>
+  </div>
+  <div class="md-content">
+    <h2>What You Own</h2>
+    <ul>
+      <li><strong>Fan-out</strong> &mdash; Writing compound action prompts to all 4 agent <code>prompt.md</code> files</li>
+      <li><strong>Tracking</strong> &mdash; Reading <code>memory.md</code> to know what ran, what failed, what succeeded</li>
+      <li><strong>Synthesis</strong> &mdash; Combining outputs from all 4 agents into unified recommendations</li>
+      <li><strong>Adjustment</strong> &mdash; If an agent's eval fails after 3 retries, diagnosing and rewriting the prompt</li>
+      <li><strong>Queue management</strong> &mdash; Designing overnight runs that meaningfully consume tokens</li>
+    </ul>
+
+    <h2>The 4 Agents</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>Agent</th><th>Automates</th><th>Eval Target</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>How it Works</td><td>Flow mapping, process audits</td><td>All steps goal-justified + error recovery</td></tr>
+          <tr><td>2</td><td>How we Communicate</td><td>Layout specs, responsive CSS, Playwright</td><td>Responsive Taste Test &ge; 27/30</td></tr>
+          <tr><td>3</td><td>How it Looks</td><td>Color systems, type scales, spacing tokens</td><td>Design Taste Test &ge; 27/30 + WCAG AA</td></tr>
+          <tr><td>4</td><td>How it Feels</td><td>Emotion maps, copy systems, personality</td><td>All gaps mapped + interventions specific</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Workflow: Fan-Out + Synthesis</h2>
+    <div class="pattern-block">
+      <h4>Orchestration Process</h4>
+      <div class="pattern-step"><span class="step-num">1</span> Rod gives you a design target (page, feature, or full site)</div>
+      <div class="pattern-step"><span class="step-num">2</span> <strong>PLAN:</strong> Break into 4 compound action prompts, one per agent</div>
+      <div class="pattern-step"><span class="step-num">3</span> <strong>WRITE:</strong> Save each prompt to the agent's <code>prompt.md</code> with input, eval target, token budget, output location</div>
+      <div class="pattern-step"><span class="step-num">4</span> <strong>FAN-OUT:</strong> Rod starts each agent in a separate session</div>
+      <div class="pattern-step"><span class="step-num">5</span> <strong>WAIT:</strong> Agents run autonomously (overnight if needed)</div>
+      <div class="pattern-step"><span class="step-num">6</span> <strong>COLLECT:</strong> Read all <code>memory.md</code> files + check <code>assets/</code> folders</div>
+      <div class="pattern-step"><span class="step-num">7</span> <strong>SYNTHESIZE:</strong> Find cross-pillar conflicts, agreements, trade-offs</div>
+      <div class="pattern-step"><span class="step-num">8</span> <strong>REPORT:</strong> Write <code>synthesis.md</code> with unified recommendation</div>
+    </div>
+
+    <h2>Prompt Template for Agents</h2>
+    <pre><code># Task: [Short Title]
+Date: YYYY-MM-DD
+Token Budget: [X]M
+
+## Input
+[Specific files, pages, or features to process]
+
+## Process
+[The compound action steps]
+
+## Eval Target
+- Stop condition: [e.g., "Taste Test &ge; 27/30"]
+- Max retries: 3
+
+## Output
+Save to: assets/[YYYY-MM-DD]-[project]/
+Expected files:
+- [file1.md]
+- [file2.css]
+
+## When Done
+Update memory.md with: outcome | files | eval score | decisions | patterns</code></pre>
+
+    <h2>Cross-Pillar Conflict Resolution</h2>
+    <ul>
+      <li><strong>Works vs. Looks</strong> &mdash; Function wins</li>
+      <li><strong>Communicates vs. Feels</strong> &mdash; Clarity wins</li>
+      <li><strong>Looks vs. Feels</strong> &mdash; Feels wins</li>
+      <li><strong>Works vs. Communicates</strong> &mdash; Investigate: is the process wrong or is the IA hiding a good process?</li>
+    </ul>
+    <p><strong>Default:</strong> Works > Communicates > Feels > Looks<br><strong>Goal:</strong> Find where all 4 are strong &mdash; never sacrifice a pillar.</p>
+
+    <h2>Overnight Run Design</h2>
+    <p>Design overnight runs <strong>earlier in the week</strong>, not last minute.</p>
+    <div class="pattern-block">
+      <h4>Good Overnight Targets</h4>
+      <div class="pattern-step"><span class="step-num">&bull;</span> Full responsive audit of all pages (Agent 2 + Playwright)</div>
+      <div class="pattern-step"><span class="step-num">&bull;</span> Complete color system generation from brand guidelines (Agent 3)</div>
+      <div class="pattern-step"><span class="step-num">&bull;</span> Full-site flow audit across all user types (Agent 1)</div>
+      <div class="pattern-step"><span class="step-num">&bull;</span> Complete emotional journey map for guest + host (Agent 4)</div>
+    </div>
+
+    <h2>Shared Resources</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Resource</th><th>Location</th><th>Used By</th></tr></thead>
+        <tbody>
+          <tr><td><code>DESIGN-TASTE-MODEL.md</code></td><td>AI Team - SL22/agents/orchestrator/prompts/</td><td>Agent 3</td></tr>
+          <tr><td><code>RESPONSIVE-DESIGN-MODEL.md</code></td><td>AI Team - SL22/agents/orchestrator/prompts/</td><td>Agent 2</td></tr>
+          <tr><td><code>responsive-test.js</code></td><td>Site Current State/mockup - Claude/</td><td>Agent 2 (Playwright)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<!-- ==================== AGENT 1 ==================== -->
+<div class="agent-panel" id="panel-agent-1">
+  <div class="agent-header" data-accent="1">
+    <span class="agent-badge">Agent 1</span>
+    <h1>How it Works</h1>
+    <div class="agent-meta"><strong>Automates:</strong> Flow mapping, process audits, goal-directed redesign &nbsp;&middot;&nbsp; <strong>Pattern:</strong> Plan-Act-Verify Loop</div>
+  </div>
+  <div class="md-content">
+    <h2>What This Agent Does</h2>
+    <p>Takes a <strong>feature, page, or user journey</strong> as input and autonomously: maps the complete flow, identifies waste, designs the minimum viable path, documents error recovery for every failure point, validates against eval criteria, and iterates until all criteria pass.</p>
+
+    <h2>Compound Action: Plan-Act-Verify</h2>
+    <div class="compound-tree">
+      <div class="tree-line"><span class="phase-label">PLAN</span></div>
+      <div class="tree-line">&boxvr;&mdash; Read prompt.md &rarr; identify feature/page/journey</div>
+      <div class="tree-line">&boxvr;&mdash; Read current flow (screenshots, code, docs)</div>
+      <div class="tree-line">&boxur;&mdash; Identify user goal + business goal</div>
+      <div class="tree-line">&nbsp;</div>
+      <div class="tree-line"><span class="phase-label">ACT</span></div>
+      <div class="tree-line">&boxvr;&mdash; Step 1: Map current flow (every step, decision, branch)</div>
+      <div class="tree-line">&boxvr;&mdash; Step 2: For each step &rarr; "Does this serve the user's goal?"</div>
+      <div class="tree-line">&boxvr;&mdash; Step 3: Eliminate steps that serve only the system</div>
+      <div class="tree-line">&boxvr;&mdash; Step 4: Design minimum viable flow</div>
+      <div class="tree-line">&boxvr;&mdash; Step 5: Document error recovery for every failure point</div>
+      <div class="tree-line">&boxur;&mdash; Step 6: Document edge cases (first-time, power user, mobile, error)</div>
+      <div class="tree-line">&nbsp;</div>
+      <div class="tree-line"><span class="phase-label">EVAL</span></div>
+      <div class="tree-line">&boxvr;&mdash; Run eval criteria checklist</div>
+      <div class="tree-line">&boxvr;&mdash; <span class="hl-green">PASS?</span> &rarr; Save files, update memory, done</div>
+      <div class="tree-line">&boxur;&mdash; <span class="hl-red">FAIL?</span> &rarr; Identify which criteria failed &rarr; fix &rarr; re-run eval (max 3x)</div>
+    </div>
+
+    <h2>Eval Criteria (Self-Check)</h2>
+    <p>All must pass:</p>
+    <ul class="checklist">
+      <li>User goal is explicitly stated</li>
+      <li>Business goal is explicitly stated</li>
+      <li>Current flow is fully mapped (no missing steps)</li>
+      <li>Every step in proposed flow is justified against the user goal</li>
+      <li>Steps eliminated are documented with reasons</li>
+      <li>Error states are documented for every failure point</li>
+      <li>Edge cases covered: first-time user, power user, mobile, error recovery</li>
+      <li>A first-time user can complete the flow in one session</li>
+      <li>Entry and exit points are clear</li>
+      <li>Output files are saved to assets/</li>
+    </ul>
+
+    <h2>Concrete Outputs</h2>
+    <div class="output-tree">
+      <div><span class="folder">reports/</span></div>
+      <div>&boxvr;&mdash; <span class="file">flow-map-[feature].md</span> <span class="comment">&larr; Every step, decision, branch</span></div>
+      <div>&boxvr;&mdash; <span class="file">goal-analysis-[feature].md</span> <span class="comment">&larr; User goal, business goal, persona, context</span></div>
+      <div>&boxvr;&mdash; <span class="file">proposed-flow-[feature].md</span> <span class="comment">&larr; Simplified goal-directed flow</span></div>
+      <div>&boxvr;&mdash; <span class="file">steps-eliminated.md</span> <span class="comment">&larr; What was cut and why</span></div>
+      <div>&boxur;&mdash; <span class="file">error-recovery-matrix.md</span> <span class="comment">&larr; Every failure point + recovery path</span></div>
+    </div>
+
+    <h2>Token Budgets</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Task Type</th><th>Budget</th><th>Expected Runtime</th></tr></thead>
+        <tbody>
+          <tr><td>Flow audit (single feature)</td><td>0.5M</td><td>~15 min</td></tr>
+          <tr><td>Journey map (full user type)</td><td>1.5M</td><td>~45 min</td></tr>
+          <tr><td>Process redesign (with alternatives)</td><td>2M</td><td>~1 hr</td></tr>
+          <tr><td>Multi-flow analysis</td><td>3M</td><td>~2 hr</td></tr>
+          <tr><td>Full platform flow review (all pages)</td><td>5M</td><td>~4 hr (overnight)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Behavior Rules</h2>
+    <div class="behavior-grid">
+      <div class="behavior-card always">
+        <h4>Always</h4>
+        <ul>
+          <li>Map the complete flow before proposing changes</li>
+          <li>Question every step: "Does this serve the user's goal?"</li>
+          <li>Document error states &mdash; they're not optional</li>
+          <li>Think in scenarios: persona + goal + context + device</li>
+          <li>Produce files, not just conversation text</li>
+        </ul>
+      </div>
+      <div class="behavior-card never">
+        <h4>Never</h4>
+        <ul>
+          <li>Skip the eval loop &mdash; always self-check</li>
+          <li>Assume the current flow is correct because it exists</li>
+          <li>Ignore edge cases</li>
+          <li>Stop at "good enough" &mdash; iterate until eval passes</li>
+          <li>Produce vague outputs &mdash; specific steps, specific reasons</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2>Related Agents</h2>
+    <ul>
+      <li><strong>Agent 2</strong> receives your flows and produces layout/responsive specs</li>
+      <li><strong>Agent 3</strong> makes the visual layer meet taste standards</li>
+      <li><strong>Agent 4</strong> maps emotions onto the journey stages you define</li>
+    </ul>
+  </div>
+</div>
+
+
+<!-- ==================== AGENT 2 ==================== -->
+<div class="agent-panel" id="panel-agent-2">
+  <div class="agent-header" data-accent="2">
+    <span class="agent-badge">Agent 2</span>
+    <h1>How we Communicate Information</h1>
+    <div class="agent-meta"><strong>Automates:</strong> Layout specs, responsive CSS, Playwright-verified responsive design &nbsp;&middot;&nbsp; <strong>Pattern:</strong> Spec-Driven Refactor + Playwright Verification</div>
+  </div>
+  <div class="md-content">
+    <h2>What This Agent Does</h2>
+    <p>Takes a <strong>page, component, or HTML mockup</strong> as input and autonomously: inventories all information, establishes hierarchy, generates responsive CSS tokens, applies CSS, runs Playwright at 7 viewports, scores against the Responsive Taste Test, and iterates until score &ge; 27/30.</p>
+
+    <h2>Calibration Document</h2>
+    <div class="resource-callout">
+      <h4>RESPONSIVE-DESIGN-MODEL.md</h4>
+      <p>The test suite for this agent. The 30-question test IS your test suite &mdash; like TDD, you write code until they pass.</p>
+      <ul>
+        <li>30-question Responsive Taste Test (your eval)</li>
+        <li>20 responsive patterns (clamp(), auto-fill, container queries, aspect-ratio)</li>
+        <li>Decision frameworks for cards, grids, sidebars, nav at any viewport</li>
+        <li>15 anti-patterns to avoid</li>
+      </ul>
+    </div>
+
+    <h2>Compound Action: Spec-Driven Refactor + Playwright</h2>
+    <div class="compound-tree">
+      <div class="tree-line"><span class="phase-label">PLAN</span></div>
+      <div class="tree-line">&boxvr;&mdash; Read prompt.md &rarr; identify page/component/HTML file</div>
+      <div class="tree-line">&boxvr;&mdash; Read <span class="hl-accent">RESPONSIVE-DESIGN-MODEL.md</span> (calibration)</div>
+      <div class="tree-line">&boxur;&mdash; Read current CSS/HTML state</div>
+      <div class="tree-line">&nbsp;</div>
+      <div class="tree-line"><span class="phase-label">ACT</span></div>
+      <div class="tree-line">&boxvr;&mdash; Step 1: Information inventory (what data must this screen show?)</div>
+      <div class="tree-line">&boxvr;&mdash; Step 2: Priority ranking (P0 = scan first, P1 = secondary...)</div>
+      <div class="tree-line">&boxvr;&mdash; Step 3: Hierarchy map (size, weight, position assignments)</div>
+      <div class="tree-line">&boxvr;&mdash; Step 4: Layout pattern selection (card/grid/list/table)</div>
+      <div class="tree-line">&boxvr;&mdash; Step 5: Generate responsive CSS (clamp tokens, auto-fill grids, fluid type)</div>
+      <div class="tree-line">&boxvr;&mdash; Step 6: Apply CSS to HTML file</div>
+      <div class="tree-line">&boxur;&mdash; Step 7: Run Playwright &rarr; capture 7 viewports:</div>
+      <div class="tree-line">    &boxvr;&mdash; <span class="hl-blue">320px</span> (iPhone SE) &middot; <span class="hl-blue">375px</span> (iPhone SE 3) &middot; <span class="hl-blue">428px</span> (iPhone Pro Max)</div>
+      <div class="tree-line">    &boxur;&mdash; <span class="hl-blue">768px</span> (iPad) &middot; <span class="hl-blue">1024px</span> (iPad landscape) &middot; <span class="hl-blue">1280px</span> (laptop) &middot; <span class="hl-blue">1440px</span> (desktop)</div>
+      <div class="tree-line">&nbsp;</div>
+      <div class="tree-line"><span class="phase-label">EVAL</span></div>
+      <div class="tree-line">&boxvr;&mdash; Score against 30-question Responsive Taste Test</div>
+      <div class="tree-line">&boxvr;&mdash; <span class="hl-green">Score &ge; 27?</span> &rarr; PASS &rarr; save files, update memory</div>
+      <div class="tree-line">&boxur;&mdash; <span class="hl-red">Score &lt; 27?</span> &rarr; Identify failures &rarr; fix CSS &rarr; re-run Playwright &rarr; re-score (max 3x)</div>
+    </div>
+
+    <h2>Eval Criteria</h2>
+    <p>Responsive Taste Test &ge; 27/30, plus:</p>
+    <ul class="checklist">
+      <li>No horizontal scroll at any viewport</li>
+      <li>All cards adapt (stack on mobile, fluid on tablet, full on desktop)</li>
+      <li>Sidebar becomes bottom bar on mobile (&lt;768px)</li>
+      <li>All touch targets &ge; 44px</li>
+      <li>Typography scales fluidly (no overflow, no tiny text)</li>
+      <li>Information hierarchy preserved at every viewport</li>
+    </ul>
+
+    <h2>Playwright Integration</h2>
+    <pre><code># Full capture (7 viewports x 12 pages)
+node responsive-test.js --label before
+
+# Single page quick check
+node responsive-test.js --page page-explore --viewport 375
+
+# After fixes
+node responsive-test.js --label after</code></pre>
+
+    <h2>Concrete Outputs</h2>
+    <div class="output-tree">
+      <div><span class="folder">reports/</span></div>
+      <div>&boxvr;&mdash; <span class="file">hierarchy-map-[page].md</span> <span class="comment">&larr; Information priority ranking</span></div>
+      <div>&boxvr;&mdash; <span class="file">layout-spec-[page].md</span> <span class="comment">&larr; Pattern choices + responsive behavior</span></div>
+      <div>&boxur;&mdash; <span class="file">responsive-taste-test-score.md</span> <span class="comment">&larr; XX/30 with pass/fail per question</span></div>
+      <div>&nbsp;</div>
+      <div><span class="folder">css/</span></div>
+      <div>&boxvr;&mdash; <span class="file">responsive-tokens.css</span> <span class="comment">&larr; CSS custom properties (clamp values)</span></div>
+      <div>&boxur;&mdash; <span class="file">layout-overrides-[page].css</span> <span class="comment">&larr; Page-specific responsive rules</span></div>
+      <div>&nbsp;</div>
+      <div><span class="folder">screenshots/</span></div>
+      <div>&boxvr;&mdash; <span class="file">before/</span> <span class="comment">&larr; Pre-fix state (7 viewports)</span></div>
+      <div>&boxur;&mdash; <span class="file">after/</span> <span class="comment">&larr; Post-fix state (7 viewports)</span></div>
+    </div>
+
+    <h2>Token Budgets</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Task Type</th><th>Budget</th><th>Expected Runtime</th></tr></thead>
+        <tbody>
+          <tr><td>Layout audit (single page)</td><td>0.5M</td><td>~15 min</td></tr>
+          <tr><td>Responsive CSS for single component</td><td>1M</td><td>~30 min</td></tr>
+          <tr><td>Full page responsive overhaul</td><td>2M</td><td>~1 hr</td></tr>
+          <tr><td>Multi-page responsive system</td><td>3M</td><td>~2 hr</td></tr>
+          <tr><td>Full site responsive audit + Playwright</td><td>5M</td><td>~4 hr (overnight)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Behavior Rules</h2>
+    <div class="behavior-grid">
+      <div class="behavior-card always">
+        <h4>Always</h4>
+        <ul>
+          <li>Start with information inventory before layout</li>
+          <li>Use RESPONSIVE-DESIGN-MODEL.md patterns (not arbitrary CSS)</li>
+          <li>Verify with Playwright &mdash; screenshots are proof</li>
+          <li>Iterate until the score passes, not until it "looks OK"</li>
+          <li>Produce CSS files, not just descriptions</li>
+        </ul>
+      </div>
+      <div class="behavior-card never">
+        <h4>Never</h4>
+        <ul>
+          <li>Skip Playwright verification</li>
+          <li>Use fixed pixel widths (use clamp, auto-fill, aspect-ratio)</li>
+          <li>Hide content on mobile instead of reflowing</li>
+          <li>Ignore the 30-question test</li>
+          <li>Stop before the eval passes</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2>Related Agents</h2>
+    <ul>
+      <li><strong>Agent 1</strong> gives you the flows to lay out</li>
+      <li><strong>Agent 3</strong> makes your hierarchy visually beautiful with tokens</li>
+      <li><strong>Agent 4</strong> adds emotional weight to your layout priorities</li>
+    </ul>
+  </div>
+</div>
+
+
+<!-- ==================== AGENT 3 ==================== -->
+<div class="agent-panel" id="panel-agent-3">
+  <div class="agent-header" data-accent="3">
+    <span class="agent-badge">Agent 3</span>
+    <h1>How it Looks</h1>
+    <div class="agent-meta"><strong>Automates:</strong> Color systems, typography scales, spacing tokens, visual CSS generation &nbsp;&middot;&nbsp; <strong>Pattern:</strong> TDD Sandbox (Taste Test = Test Suite)</div>
+  </div>
+  <div class="md-content">
+    <h2>What This Agent Does</h2>
+    <p>Takes a <strong>page, component, brand brief, or HTML mockup</strong> as input and autonomously: audits the current visual state, runs the 30-question Taste Test, generates a complete visual token system, applies tokens as CSS custom properties, re-runs the Taste Test, checks WCAG AA compliance, and iterates until Taste Test &ge; 27/30 AND WCAG AA passes.</p>
+    <p>The 30-question Taste Test IS the test suite. Write CSS (code) until the tests pass. Do not modify the tests.</p>
+
+    <h2>Calibration Document</h2>
+    <div class="resource-callout" style="border-left-color: var(--accent-3);">
+      <h4 style="color: var(--accent-3);">DESIGN-TASTE-MODEL.md</h4>
+      <p>The test suite for this agent. Contains everything needed to evaluate visual quality:</p>
+      <ul>
+        <li>30-question Design Taste Test (your test suite)</li>
+        <li>20 visual patterns for premium feel</li>
+        <li>Decision frameworks for every component type</li>
+        <li>15 anti-patterns to avoid</li>
+        <li>Quality Gap Analysis</li>
+      </ul>
+    </div>
+
+    <h2>Compound Action: TDD Sandbox</h2>
+    <div class="compound-tree">
+      <div class="tree-line"><span class="phase-label">PLAN</span></div>
+      <div class="tree-line">&boxvr;&mdash; Read prompt.md &rarr; identify page/component/HTML file</div>
+      <div class="tree-line">&boxvr;&mdash; Read <span class="hl-orange">DESIGN-TASTE-MODEL.md</span> (test suite)</div>
+      <div class="tree-line">&boxur;&mdash; Read current CSS/HTML state</div>
+      <div class="tree-line">&nbsp;</div>
+      <div class="tree-line"><span class="phase-label">ACT &mdash; Round 1</span></div>
+      <div class="tree-line">&boxvr;&mdash; Step 1: Visual audit &mdash; catalog every color, font-size, spacing value</div>
+      <div class="tree-line">&boxvr;&mdash; Step 2: Run 30-question Taste Test &rarr; score XX/30, list failures</div>
+      <div class="tree-line">&boxvr;&mdash; Step 3: Generate token system:</div>
+      <div class="tree-line">&boxv;   &boxvr;&mdash; Color tokens: <span class="hl-orange">--color-primary</span>, <span class="hl-orange">--color-secondary</span>, neutral scale (8-10 values)</div>
+      <div class="tree-line">&boxv;   &boxvr;&mdash; Typography tokens: <span class="hl-orange">--font-size-xs</span> through <span class="hl-orange">--font-size-4xl</span> (clamp values)</div>
+      <div class="tree-line">&boxv;   &boxvr;&mdash; Spacing tokens: <span class="hl-orange">--space-1</span> through <span class="hl-orange">--space-12</span> (4px base scale)</div>
+      <div class="tree-line">&boxv;   &boxvr;&mdash; Radius tokens: <span class="hl-orange">--radius-sm</span>, <span class="hl-orange">--radius-md</span>, <span class="hl-orange">--radius-lg</span></div>
+      <div class="tree-line">&boxv;   &boxur;&mdash; Shadow tokens: <span class="hl-orange">--shadow-sm</span>, <span class="hl-orange">--shadow-md</span>, <span class="hl-orange">--shadow-lg</span></div>
+      <div class="tree-line">&boxvr;&mdash; Step 4: Write CSS file with all tokens as custom properties</div>
+      <div class="tree-line">&boxvr;&mdash; Step 5: Apply tokens to HTML (replace hardcoded values with var())</div>
+      <div class="tree-line">&boxur;&mdash; Step 6: Check WCAG AA: <span class="hl-green">4.5:1</span> text, <span class="hl-green">3:1</span> UI elements, focus indicators</div>
+      <div class="tree-line">&nbsp;</div>
+      <div class="tree-line"><span class="phase-label">EVAL</span></div>
+      <div class="tree-line">&boxvr;&mdash; Re-run 30-question Taste Test</div>
+      <div class="tree-line">&boxvr;&mdash; <span class="hl-green">Score &ge; 27 AND WCAG AA pass?</span> &rarr; PASS &rarr; save files, update memory</div>
+      <div class="tree-line">&boxur;&mdash; <span class="hl-red">Score &lt; 27 OR WCAG fail?</span> &rarr; Identify failures &rarr; fix tokens/CSS &rarr; retry (max 3x)</div>
+    </div>
+
+    <h2>Eval Criteria</h2>
+    <p>Design Taste Test &ge; 27/30, plus:</p>
+    <ul class="checklist">
+      <li>All colors from a defined palette with usage rules</li>
+      <li>Typography uses a consistent scale (no arbitrary sizes)</li>
+      <li>Spacing follows the scale (no arbitrary px values)</li>
+      <li>WCAG AA contrast: 4.5:1 text, 3:1 UI elements</li>
+      <li>Visual consistency across all components</li>
+      <li>Every value is specific (hex, px, rem) &mdash; nothing vague</li>
+      <li>Color tokens have documented usage rules</li>
+      <li>Focus indicators visible on all interactive elements</li>
+    </ul>
+
+    <h2>Concrete Outputs</h2>
+    <div class="output-tree">
+      <div><span class="folder">css/</span></div>
+      <div>&boxvr;&mdash; <span class="file">color-tokens.css</span> <span class="comment">&larr; --color-* custom properties</span></div>
+      <div>&boxvr;&mdash; <span class="file">typography-tokens.css</span> <span class="comment">&larr; --font-size-*, --font-weight-*, --line-height-*</span></div>
+      <div>&boxvr;&mdash; <span class="file">spacing-tokens.css</span> <span class="comment">&larr; --space-* scale</span></div>
+      <div>&boxvr;&mdash; <span class="file">component-tokens.css</span> <span class="comment">&larr; --radius-*, --shadow-*, --transition-*</span></div>
+      <div>&boxur;&mdash; <span class="file">visual-system.css</span> <span class="comment">&larr; All tokens combined + usage comments</span></div>
+      <div>&nbsp;</div>
+      <div><span class="folder">reports/</span></div>
+      <div>&boxvr;&mdash; <span class="file">visual-audit-[page].md</span> <span class="comment">&larr; Current state catalog</span></div>
+      <div>&boxvr;&mdash; <span class="file">taste-test-score.md</span> <span class="comment">&larr; XX/30 with pass/fail per question</span></div>
+      <div>&boxvr;&mdash; <span class="file">color-system.md</span> <span class="comment">&larr; Palette + usage rules + contrast ratios</span></div>
+      <div>&boxvr;&mdash; <span class="file">typography-scale.md</span> <span class="comment">&larr; Scale + pairings + hierarchy</span></div>
+      <div>&boxvr;&mdash; <span class="file">spacing-system.md</span> <span class="comment">&larr; Scale + usage patterns</span></div>
+      <div>&boxur;&mdash; <span class="file">wcag-audit.md</span> <span class="comment">&larr; Contrast ratios for all text/UI combos</span></div>
+    </div>
+
+    <h2>Token Budgets</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Task Type</th><th>Budget</th><th>Expected Runtime</th></tr></thead>
+        <tbody>
+          <tr><td>Visual audit (single page)</td><td>0.5M</td><td>~15 min</td></tr>
+          <tr><td>Color system generation</td><td>1.5M</td><td>~45 min</td></tr>
+          <tr><td>Typography + spacing system</td><td>1.5M</td><td>~45 min</td></tr>
+          <tr><td>Full token system (color + type + spacing + shadows)</td><td>3M</td><td>~2 hr</td></tr>
+          <tr><td>Full site visual overhaul + Taste Test</td><td>5M</td><td>~4 hr (overnight)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Behavior Rules</h2>
+    <div class="behavior-grid">
+      <div class="behavior-card always">
+        <h4>Always</h4>
+        <ul>
+          <li>Use the DESIGN-TASTE-MODEL.md as your test suite &mdash; don't skip questions</li>
+          <li>Specify exact values: hex codes, px, rem, ratios</li>
+          <li>Check WCAG AA on every color combination</li>
+          <li>Produce CSS files with custom properties &mdash; not just descriptions</li>
+          <li>Iterate until the Taste Test passes</li>
+        </ul>
+      </div>
+      <div class="behavior-card never">
+        <h4>Never</h4>
+        <ul>
+          <li>Use arbitrary colors (every color needs a token + usage rule)</li>
+          <li>Skip the Taste Test &mdash; it's your test suite</li>
+          <li>Ignore accessibility (contrast, focus indicators, motion)</li>
+          <li>Stop at "close enough" &mdash; 27/30 minimum</li>
+          <li>Produce reports without CSS &mdash; the CSS IS the deliverable</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2>Related Agents</h2>
+    <ul>
+      <li><strong>Agent 2</strong> sets the hierarchy you make beautiful</li>
+      <li><strong>Agent 1</strong> sets the flow structure you design around</li>
+      <li><strong>Agent 4</strong> uses your tokens to create emotional resonance</li>
+    </ul>
+  </div>
+</div>
+
+
+<!-- ==================== AGENT 4 ==================== -->
+<div class="agent-panel" id="panel-agent-4">
+  <div class="agent-header" data-accent="4">
+    <span class="agent-badge">Agent 4</span>
+    <h1>How it Feels</h1>
+    <div class="agent-meta"><strong>Automates:</strong> Emotional journey maps, copy systems, personality guides, intervention specs &nbsp;&middot;&nbsp; <strong>Pattern:</strong> Evidence-Gap Probe + Adversarial Architect</div>
+  </div>
+  <div class="md-content">
+    <h2>What This Agent Does</h2>
+    <p>Takes a <strong>user journey, flow, or feature</strong> as input and autonomously: maps the emotional state at every step, defines target emotions, identifies the largest gaps, generates 3 different intervention approaches per gap (Adversarial Architect), selects the most robust, produces a complete copy system, and evaluates against criteria &mdash; iterating until all pass.</p>
+
+    <h2>Compound Action: Evidence-Gap Probe + Adversarial Architect</h2>
+    <div class="compound-tree">
+      <div class="tree-line"><span class="phase-label">PLAN</span></div>
+      <div class="tree-line">&boxvr;&mdash; Read prompt.md &rarr; identify journey/flow/feature</div>
+      <div class="tree-line">&boxvr;&mdash; Read Agent 1 output if available (flow map)</div>
+      <div class="tree-line">&boxur;&mdash; Identify user persona + context + device + mental state</div>
+      <div class="tree-line">&nbsp;</div>
+      <div class="tree-line"><span class="phase-label">ACT</span></div>
+      <div class="tree-line">&boxvr;&mdash; Step 1: Map <span class="hl-purple">CURRENT</span> emotional state at every journey step</div>
+      <div class="tree-line">&boxvr;&mdash; Step 2: Define <span class="hl-green">TARGET</span> emotional state at every step</div>
+      <div class="tree-line">&boxvr;&mdash; Step 3: Calculate emotional gaps (current vs. target, rate: low/med/high/critical)</div>
+      <div class="tree-line">&boxvr;&mdash; Step 4: For each <span class="hl-red">HIGH or CRITICAL</span> gap:</div>
+      <div class="tree-line">&boxv;   &boxvr;&mdash; Generate <strong>3 intervention approaches</strong> (Adversarial Architect)</div>
+      <div class="tree-line">&boxv;   &boxvr;&mdash; For each approach, describe how it could fail</div>
+      <div class="tree-line">&boxv;   &boxur;&mdash; Select the most robust approach</div>
+      <div class="tree-line">&boxvr;&mdash; Step 5: Write specific interventions:</div>
+      <div class="tree-line">&boxv;   &boxvr;&mdash; Exact copy strings (headlines, CTAs, error messages, confirmation text)</div>
+      <div class="tree-line">&boxv;   &boxvr;&mdash; Micro-interaction specs (animation type, duration, trigger)</div>
+      <div class="tree-line">&boxv;   &boxvr;&mdash; Timing/pacing (when to show, how long, transition)</div>
+      <div class="tree-line">&boxv;   &boxur;&mdash; Personality voice (formal/warm/playful + example sentences)</div>
+      <div class="tree-line">&boxur;&mdash; Step 6: Compile into copy system document</div>
+      <div class="tree-line">&nbsp;</div>
+      <div class="tree-line"><span class="phase-label">EVAL</span></div>
+      <div class="tree-line">&boxvr;&mdash; Run eval criteria checklist</div>
+      <div class="tree-line">&boxvr;&mdash; <span class="hl-green">All pass?</span> &rarr; PASS &rarr; save files, update memory</div>
+      <div class="tree-line">&boxur;&mdash; <span class="hl-red">Criteria fail?</span> &rarr; Identify gaps &rarr; fix interventions &rarr; retry (max 3x)</div>
+    </div>
+
+    <h2>Eval Criteria (Self-Check)</h2>
+    <p>All must pass:</p>
+    <ul class="checklist">
+      <li>Every journey step has a documented current AND target emotion</li>
+      <li>All HIGH/CRITICAL gaps have interventions</li>
+      <li>Each intervention has 3 alternative approaches considered</li>
+      <li>Interventions are specific: exact copy text, animation specs, timing</li>
+      <li>No emotional manipulation: no false urgency, artificial scarcity, guilt</li>
+      <li>Vulnerable moments protected: payment, personal info, waiting states</li>
+      <li>Delight is appropriate to context (no celebration during errors)</li>
+      <li>Copy system is complete: success, error, waiting, empty, confirmation tones</li>
+      <li>All interventions serve the user's goal (emotion as vehicle, not destination)</li>
+      <li>Output files are saved to assets/</li>
+    </ul>
+
+    <h2>Emotional States Reference</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Journey Stage</th><th>Common Emotion</th><th>Target Emotion</th><th>Intervention Tools</th></tr></thead>
+        <tbody>
+          <tr><td>First visit</td><td>Curiosity + Skepticism</td><td>Welcome + Trust</td><td>Warm copy, social proof, clear value prop</td></tr>
+          <tr><td>Search</td><td>Hope + Overwhelm</td><td>Confidence + Control</td><td>Smart defaults, progressive filters, reassurance</td></tr>
+          <tr><td>Listing detail</td><td>Interest + Uncertainty</td><td>Excitement + Safety</td><td>Gallery quality, trust signals, clear pricing</td></tr>
+          <tr><td>Proposal creation</td><td>Commitment anxiety</td><td>Confident anticipation</td><td>Progress indicators, low-risk framing, save draft</td></tr>
+          <tr><td>Waiting for response</td><td>Anxiety + Doubt</td><td>Patient confidence</td><td>Timeline, response time indicator, notification promise</td></tr>
+          <tr><td>Booking confirmation</td><td>Relief + Excitement</td><td>Joy + Anticipation</td><td>Celebration, next steps, community welcome</td></tr>
+          <tr><td>Host onboarding</td><td>Effort anxiety</td><td>Empowered confidence</td><td>Progress bar, quick wins, encouragement</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Concrete Outputs</h2>
+    <div class="output-tree">
+      <div><span class="folder">reports/</span></div>
+      <div>&boxvr;&mdash; <span class="file">emotion-map-[journey].md</span> <span class="comment">&larr; Every step: current, target, gap, intervention</span></div>
+      <div>&boxvr;&mdash; <span class="file">intervention-specs.md</span> <span class="comment">&larr; Specific designs per gap (copy, animation, timing)</span></div>
+      <div>&boxur;&mdash; <span class="file">alternatives-considered.md</span> <span class="comment">&larr; 3 approaches per gap + failure analysis</span></div>
+      <div>&nbsp;</div>
+      <div><span class="folder">copy/</span></div>
+      <div>&boxvr;&mdash; <span class="file">copy-system.md</span> <span class="comment">&larr; Full tone/voice guide with example strings</span></div>
+      <div>&boxvr;&mdash; <span class="file">success-messages.md</span> <span class="comment">&larr; All success/confirmation copy</span></div>
+      <div>&boxvr;&mdash; <span class="file">error-messages.md</span> <span class="comment">&larr; All error/recovery copy</span></div>
+      <div>&boxvr;&mdash; <span class="file">waiting-states.md</span> <span class="comment">&larr; All loading/waiting/empty state copy</span></div>
+      <div>&boxvr;&mdash; <span class="file">onboarding-copy.md</span> <span class="comment">&larr; Welcome, activation, first-time guidance</span></div>
+      <div>&boxur;&mdash; <span class="file">personality-guide.md</span> <span class="comment">&larr; Brand voice, tone per context, do/don't</span></div>
+    </div>
+
+    <h2>Token Budgets</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Task Type</th><th>Budget</th><th>Expected Runtime</th></tr></thead>
+        <tbody>
+          <tr><td>Emotional audit (single flow)</td><td>0.5M</td><td>~15 min</td></tr>
+          <tr><td>Journey emotion map (full user type)</td><td>1.5M</td><td>~45 min</td></tr>
+          <tr><td>Copy system generation</td><td>2M</td><td>~1 hr</td></tr>
+          <tr><td>Full emotional design system</td><td>3M</td><td>~2 hr</td></tr>
+          <tr><td>Complete guest + host emotional audit</td><td>5M</td><td>~4 hr (overnight)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Behavior Rules</h2>
+    <div class="behavior-grid">
+      <div class="behavior-card always">
+        <h4>Always</h4>
+        <ul>
+          <li>Map emotions before proposing solutions</li>
+          <li>Generate 3 approaches per gap (Adversarial Architect) &mdash; don't commit to the first idea</li>
+          <li>Write specific copy strings &mdash; not "something warm" but the actual words</li>
+          <li>Consider vulnerable moments (payment, waiting, sharing info)</li>
+          <li>Produce complete copy system files &mdash; not just reports</li>
+        </ul>
+      </div>
+      <div class="behavior-card never">
+        <h4>Never</h4>
+        <ul>
+          <li>Use emotional manipulation (false urgency, artificial scarcity)</li>
+          <li>Add delight at inappropriate moments</li>
+          <li>Stop at vague interventions ("make it warmer") &mdash; be specific</li>
+          <li>Skip the adversarial step &mdash; always consider 3 approaches</li>
+          <li>Produce emotion maps without copy &mdash; the copy IS the deliverable</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2>Related Agents</h2>
+    <ul>
+      <li><strong>Agent 1</strong> defines the flows you map emotions onto</li>
+      <li><strong>Agent 2</strong> sets the information structure you make feel right</li>
+      <li><strong>Agent 3</strong> provides the visual tokens you use to evoke emotion</li>
+    </ul>
+  </div>
+</div>
+
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  Split Lease &middot; Design Framework Agents &middot; Automated Design Processes &middot; 2026
+</footer>
+
+<script>
+function showPanel(id) {
+  document.querySelectorAll('.agent-panel').forEach(p => p.classList.remove('active'));
+  const panel = document.getElementById('panel-' + id);
+  if (panel) panel.classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  const tab = document.querySelector('.nav-tab[data-agent="' + id + '"]');
+  if (tab) tab.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

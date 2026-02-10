@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Listing Dashboard - 1 Bedroom Private Room in Queens</title>
+<style>
+body { font-family: sans-serif; font-size: 14px; max-width: 800px; margin: 0 auto; padding: 10px; }
+table { border-collapse: collapse; }
+table th, table td { border: 1px solid #000; padding: 4px 8px; text-align: left; }
+.edit-btn { font-size: 12px; margin-left: 10px; }
+.banner { border: 1px solid #000; padding: 8px; margin: 8px 0; }
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<p><a href="#">&larr; All My Listings</a></p>
+<p><a href="#">Give $50, Get $50</a></p>
+
+<div class="banner">
+<strong>Need help setting up? Ask a Specialist Co-host!</strong><br>
+Our specialists can help you optimize your listing and attract more quality tenants.
+</div>
+
+<!-- ACTIONS -->
+<p>
+<button>Preview Listing</button>
+<button>Copy Listing Link</button>
+<button>AI Import Assistant</button>
+</p>
+
+<hr>
+
+<!-- SECTION: TITLE & ADDRESS -->
+<h2>1 Bedroom Private Room in Queens <button class="edit-btn">[Edit]</button></h2>
+<p><a href="#">Import reviews from other sites</a></p>
+<p><strong>Address:</strong> 124-56 135th Pl, Jamaica, NY 11420, USA</p>
+
+<hr>
+
+<!-- SECTION: STATUS -->
+<h3>Status</h3>
+<p>
+Listing is <strong>Offline</strong>.
+Listing has been active since February 5, 2026.
+</p>
+<p><button id="statusToggle" onclick="toggleStatus()">Go Online</button></p>
+<script>
+function toggleStatus() {
+  var btn = document.getElementById('statusToggle');
+  if (btn.textContent === 'Go Online') { btn.textContent = 'Go Offline'; }
+  else { btn.textContent = 'Go Online'; }
+}
+</script>
+
+<hr>
+
+<!-- SECTION: DESCRIPTION -->
+<h3>Description of Lodging <button class="edit-btn">[Edit]</button></h3>
+<p>1 bedroom private room available for nightly rental.</p>
+
+<hr>
+
+<!-- SECTION: NEIGHBORHOOD -->
+<h3>Neighborhood Description <button class="edit-btn">[Edit]</button></h3>
+<p>No neighborhood description provided.</p>
+
+<hr>
+
+<!-- SECTION: AMENITIES -->
+<h3>Amenities <button class="edit-btn">[Edit]</button></h3>
+<p><strong>In-unit:</strong> No amenities selected</p>
+<p><strong>Building / Neighborhood:</strong> No amenities selected</p>
+
+<hr>
+
+<!-- SECTION: DETAILS -->
+<h3>Details <button class="edit-btn">[Edit]</button></h3>
+<ul>
+<li>Type of Space: Private Room</li>
+<li>1 bedrooms</li>
+<li>1 bathrooms</li>
+<li>0 sq.ft.</li>
+<li>No storage</li>
+<li>No Parking</li>
+<li>Full Kitchen</li>
+</ul>
+
+<hr>
+
+<!-- SECTION: SAFETY FEATURES -->
+<h3>Safety Features <button class="edit-btn">[Edit]</button></h3>
+<p>No safety features selected</p>
+
+<hr>
+
+<!-- SECTION: PRICING -->
+<h3>Pricing and Lease Style <button class="edit-btn">[Edit]</button></h3>
+<p><strong>Selected Lease Style:</strong> Nightly</p>
+<p><strong>Nights / Week:</strong> 4 nights available</p>
+
+<h4>Weekly Total by Occupancy</h4>
+<table>
+<thead>
+<tr><th>Nights</th><th>Total</th><th>Per Night</th></tr>
+</thead>
+<tbody>
+<tr><td>1 night</td><td>$102</td><td>$102/nt</td></tr>
+<tr><td>2 nights</td><td>$190</td><td>$95/nt</td></tr>
+<tr><td>3 nights</td><td>$267</td><td>$89/nt</td></tr>
+<tr><td>4 nights</td><td>$336</td><td>$84/nt</td></tr>
+<tr><td>5 nights</td><td>$395</td><td>$79/nt</td></tr>
+<tr><td>6 nights</td><td>$474</td><td>$79/nt</td></tr>
+<tr><td>7 nights</td><td>$539</td><td>$77/nt</td></tr>
+</tbody>
+</table>
+<p><em>Weekly total based on selected number of nights</em></p>
+
+<h4>Additional Charges</h4>
+<ul>
+<li>Damage Deposit: $500</li>
+<li>Maintenance Fee: $0</li>
+</ul>
+
+<hr>
+
+<!-- SECTION: RULES -->
+<h3>Rules <button class="edit-btn">[Edit]</button></h3>
+<p>No rules selected</p>
+<ul>
+<li>Gender Preferred: No Preference</li>
+<li>2 max guests allowed</li>
+</ul>
+
+<hr>
+
+<!-- SECTION: AVAILABILITY -->
+<h3>Listing Availability <button class="edit-btn">[Edit]</button></h3>
+<p><strong>Lease Term:</strong> 6 - 52 weeks</p>
+<p><strong>Earliest available date:</strong> 02/05/2026</p>
+<p><strong>Check In Time:</strong> 12:00 pm</p>
+<p><strong>Check Out Time:</strong> 9:00 am</p>
+
+<h4>Calendar - February 2026</h4>
+<p>Add or remove blocked dates by selecting a range or individual days.</p>
+<p><button>Range</button> <button>Individual dates</button></p>
+
+<p><strong>Dates Blocked by You:</strong> You don't have any future date blocked yet</p>
+
+<table>
+<thead>
+<tr><th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th></tr>
+</thead>
+<tbody>
+<tr><td>01</td><td>02</td><td>03</td><td>04</td><td>05*</td><td>06</td><td>07</td></tr>
+<tr><td>08</td><td>09</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td></tr>
+<tr><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td></tr>
+<tr><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td></tr>
+</tbody>
+</table>
+<p>* = First Available</p>
+
+<p><strong>Legend:</strong> Restricted Weekly | Blocked Manually | Available | First Available</p>
+
+<hr>
+
+<!-- SECTION: PHOTOS -->
+<h3>Photos <button class="edit-btn">[Add Photos]</button></h3>
+<p>No photos uploaded yet.</p>
+<p><a href="#">Add your first photo</a></p>
+
+<hr>
+
+<!-- SECTION: CANCELLATION POLICY -->
+<h3>Cancellation Policy <button class="edit-btn">[Edit]</button></h3>
+<p><strong>Standard</strong></p>
+<p>Standard Policy</p>
+
+<hr>
+<p><em>End of listing dashboard</em></p>
+
+</body>
+</html>
