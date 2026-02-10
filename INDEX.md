@@ -10,29 +10,35 @@ Designed for **overnight, unattended execution**. Each agent is a compound actio
 design-framework-agents/
 ├── INDEX.md                              ← You are here
 ├── orchestrator/
-│   ├── agent.md                          ← Fan-out coordinator + synthesis
+│   ├── agent.md                          ← Pipeline coordinator
 │   ├── memory.md
 │   └── prompts/
-├── agent-1-how-it-works/                 ← Automates: flow mapping, process audits
+├── agent-1-how-it-works/                 ← Step 1: flow mapping, process audits
 │   ├── agent.md
 │   ├── prompt.md
 │   ├── memory.md
 │   └── assets/
-├── agent-2-how-we-communicate/           ← Automates: layout, responsive, IA
+├── agent-2-how-we-communicate/           ← Step 2: layout, responsive, IA
 │   ├── agent.md
 │   ├── prompt.md
 │   ├── memory.md
 │   └── assets/
-├── agent-3-how-it-looks/                 ← Automates: color, typography, visual tokens
+├── agent-3-how-it-looks/                 ← Step 3: color, typography, visual tokens
 │   ├── agent.md
 │   ├── prompt.md
 │   ├── memory.md
 │   └── assets/
-└── agent-4-how-it-feels/                 ← Automates: emotion maps, copy, personality
-    ├── agent.md
-    ├── prompt.md
-    ├── memory.md
-    └── assets/
+├── agent-4-how-it-feels/                 ← Step 4: emotion maps, copy, personality
+│   ├── agent.md
+│   ├── prompt.md
+│   ├── memory.md
+│   └── assets/
+└── run-YYYYMMDD-HHMMSS/                  ← Pipeline runs (timestamp = collision-safe)
+    ├── step-1-works/
+    ├── step-2-communicates/
+    ├── step-3-looks/
+    ├── step-4-feels/
+    └── validation/
 ```
 
 ---
@@ -77,14 +83,20 @@ This is the **Plan-Act-Verify Loop** from the strategy doc. The eval is what mak
 
 ### Pipeline Run
 
+Each run gets a **timestamp folder** — not a sequential number — so multiple machines can run pipelines on the same project without collisions.
+
+**Format:** `run-YYYYMMDD-HHMMSS`
+**Example:** `run-20260210-095033`
+
 ```
 1. Give orchestrator a design target + raw content
-2. Agent 1 → bare functional HTML         (step-1-works/)
-3. Agent 2 → structured wireframe          (step-2-communicates/)
-4. Agent 3 → production-styled page        (step-3-looks/)
-5. Agent 4 → emotionally intelligent page  (step-4-feels/)
-6. Validation loop: all 4 agents score the final page in parallel
-7. Fix failures, re-validate until all pass (validation/)
+2. Create run folder: run-YYYYMMDD-HHMMSS/
+3. Agent 1 → bare functional HTML         (step-1-works/)
+4. Agent 2 → structured wireframe          (step-2-communicates/)
+5. Agent 3 → production-styled page        (step-3-looks/)
+6. Agent 4 → emotionally intelligent page  (step-4-feels/)
+7. Validation loop: all 4 agents score the final page in parallel
+8. Fix failures, re-validate until all pass (validation/)
 ```
 
 | Tactic | How It Applies |

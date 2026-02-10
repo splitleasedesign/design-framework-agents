@@ -40,28 +40,28 @@ PIPELINE PHASE (sequential — each agent builds on the previous):
 2. Agent 1 (How it Works):
    - Input: raw text content / feature spec
    - Output: bare functional HTML — ugly, but every action reachable
-   - Save to: pipeline-run-XXX/step-1-works/
+   - Save to: run-YYYYMMDD-HHMMSS/step-1-works/
 
 3. Agent 2 (How we Communicate):
    - Input: Agent 1's HTML output
    - Output: restructured wireframe — improved IA, hierarchy, cognitive load
-   - Save to: pipeline-run-XXX/step-2-communicates/
+   - Save to: run-YYYYMMDD-HHMMSS/step-2-communicates/
 
 4. Agent 3 (How it Looks):
    - Input: Agent 2's HTML output + Style-guide.md
    - Output: production-styled page — colors, typography, icons, shadows
-   - Save to: pipeline-run-XXX/step-3-looks/
+   - Save to: run-YYYYMMDD-HHMMSS/step-3-looks/
 
 5. Agent 4 (How it Feels):
    - Input: Agent 3's HTML output
    - Output: final page — emotional copy, micro-interactions, reassurance
-   - Save to: pipeline-run-XXX/step-4-feels/
+   - Save to: run-YYYYMMDD-HHMMSS/step-4-feels/
 
 VALIDATION PHASE (parallel — all 4 agents review the final output):
 6. Run all 4 agents simultaneously, each scoring the final HTML
    through their specific lens (function, communication, visual, emotion)
 7. Fix any failures, re-validate until all pass
-8. Write validation reports to: pipeline-run-XXX/validation/
+8. Write validation reports to: run-YYYYMMDD-HHMMSS/validation/
 ```
 
 ---
@@ -118,7 +118,7 @@ When agent outputs conflict:
 2. **Run the pipeline sequentially**: Agent 1 → 2 → 3 → 4, each reading the previous output
 3. **Run the validation loop**: all 4 agents score the final page in parallel
 4. **Fix and re-validate** until all agents pass
-5. **Output folder structure**: `pipeline-run-XXX/step-{1..4}-{name}/` + `validation/`
+5. **Output folder**: `run-YYYYMMDD-HHMMSS/` — timestamp-based, collision-safe across multiple machines
 
 **Good pipeline targets:**
 - New page from raw content (listing dashboard, proposal flow, etc.)
